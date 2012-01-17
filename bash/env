@@ -1,0 +1,8 @@
+export MPD_HOST=butters.lan
+
+export HISTIGNORE="&:ls:cd:exit"
+export CLICOLOR=
+
+export HOMEBREW_BUILD_FROM_SOURCE=
+
+export PATH=$PATH:~/.bin

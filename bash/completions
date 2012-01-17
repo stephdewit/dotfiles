@@ -1,0 +1,8 @@
+source `brew --prefix git`/etc/bash_completion.d/git-completion.bash
+
+_compssh ()
+{
+cur=${COMP_WORDS[COMP_CWORD]};
+COMPREPLY=($(compgen -W "$(sed -e 's/,.*$//' ${HOME}/.ssh/known_hosts) --all --schema" -- $cur))
+}
+complete -F _compssh ssh
