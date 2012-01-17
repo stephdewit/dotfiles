@@ -1,0 +1,33 @@
+#!/bin/sh
+
+server=butters.lan
+share=music
+
+notification() {
+	growlcmd=`which growlnotify`
+
+	if [ -n "$growlcmd" -a -f "$growlcmd" -a -x "$growlcmd" ]; then
+		$growlcmd -m "" "$1"
+	else
+		echo "$1"
+	fi
+}
+
+if [ -d /Volumes/$share ]; then
+	notification "'$share' is already mounted"
+	exit
+fi
+
+ping -c 5 -t 2 -o $server > /dev/null 2>&1
+
+if [ $? -eq 0 ]; then
+	osascript -e "mount volume \"afp://$server/$share\"" > /dev/null 2>&1
+
+	if [ $? -eq 0 ]; then
+		notification "'$share' on '$server' has been mounted"
+	else
+		notification "Can't mount '$share' on '$server'"
+	fi
+else
+	notification "Can't ping '$server'"
+fi

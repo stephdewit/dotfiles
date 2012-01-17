@@ -1,0 +1,19 @@
+#!/bin/sh
+
+protocol=afp
+server=butters.lan
+share=home
+filename=Comptes.gsb
+destdir=$HOME/Desktop
+
+if [ ! -d /Volumes/$share ]; then
+	osascript -e "mount volume \"$protocol://$server/$share\"" > /dev/null 2>&1
+	if [ $? -ne 0 ]; then
+		echo "Can't mount '$share' on '$server'"
+		exit 1
+	fi
+fi
+
+gpg \
+	-o $destdir/$(echo $filename | sed "s/\(.*\)\(\.[^\.]*\)/\1$(date '+%Y%m%d')\2.gpg/") \
+	-c /Volumes/$share/$filename

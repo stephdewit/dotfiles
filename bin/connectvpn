@@ -1,0 +1,22 @@
+#!/bin/sh
+
+if [ "$1" == '-d' -o "$1" == '--disconnect' ]; then
+	action='disconnect'
+	vpnname="$2"
+else
+	action='connect'
+	vpnname="$1"
+fi
+
+if [ "$vpnname" == '' ]; then
+	echo "Usage: $0 [-d|--disconnect] vpn_service_name"
+	exit 1
+fi
+
+osascript <<-EOF
+tell application "System Events"
+	tell network preferences
+		$action service "$vpnname"
+	end tell
+end tell
+EOF
