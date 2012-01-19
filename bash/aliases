@@ -1,5 +1,15 @@
 serve() { python -m SimpleHTTPServer ${1:-8080}; }
 4chan() { curl $1 | grep -i "File<a href" | awk -F '<a href="' '{print $4}' | awk -F '" ' '{print $1}' | xargs wget; }
+debughttp () {
+	/usr/bin/curl $@ \
+	-o /dev/null \
+	-w "\
+dns: %{time_namelookup} \
+connect: %{time_connect} \
+pretransfer: %{time_pretransfer} \
+starttransfer: %{time_starttransfer} \
+total: %{time_total}\n"
+}
 
 alias cartman.wol="wakeonlan -i 192.168.0.255 00:11:D8:43:B9:11"
 alias cartman.halt="ssh cartman.lan sudo halt"
