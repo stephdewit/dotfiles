@@ -13,7 +13,6 @@ starttransfer: %{time_starttransfer} \
 total: %{time_total}\n"
 }
 
-
 alias cartman.wol="wakeonlan -i 192.168.0.255 00:11:D8:43:B9:11"
 alias cartman.halt="ssh cartman.lan sudo halt"
 alias extip="curl http://www.stephanedewit.be/ip.txt"
