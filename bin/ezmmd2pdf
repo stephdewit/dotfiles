@@ -1,0 +1,21 @@
+tempfile=$(mktemp -t $(basename $0))
+
+cat > $tempfile <<EOF
+latex input:        mmd-article-header
+Author:             $(osascript -e "long user name of (system info)")
+Title:              $(basename $1 .md)
+Base Header Level:  2
+LaTeX Mode:         memoir
+latex input:        mmd-article-begin-doc
+latex footer:       mmd-memoir-footer
+
+EOF
+
+cat $1 >> $tempfile
+
+mmd2pdf $tempfile
+
+rm $tempfile
+
+mv $(basename $0).pdf $(basename $1 .md).pdf
+rm $(basename $0).dvi $(basename $0).glo $(basename $0).ist
