@@ -1,4 +1,4 @@
-source .bash/aliases
-source .bash/completions
-source .bash/config
-source .bash/env
+source $HOME/.bash/aliases
+source $HOME/.bash/completions
+source $HOME/.bash/config
+source $HOME/.bash/env
