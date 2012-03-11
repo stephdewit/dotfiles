@@ -1,0 +1,7 @@
+ao=alsa
+
+vo=gl
+fs=1
+fixed-vo=1
+
+nolirc=1
