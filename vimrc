@@ -1,6 +1,7 @@
+set directory^=$HOME/.vim/swap//
+
 set visualbell
 syntax on
-set directory^=$HOME/.vim/swap//
 
 noremap <Up> <nop>
 noremap <Down> <nop>
