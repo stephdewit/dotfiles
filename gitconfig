@@ -1,0 +1,4 @@
+[user]
+	name = Stéphane de Wit
+[include]
+	path = .secret/gitconfig
