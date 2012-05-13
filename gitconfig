@@ -1,4 +1,9 @@
 [user]
 	name = Stéphane de Wit
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
 [include]
 	path = .secret/gitconfig
