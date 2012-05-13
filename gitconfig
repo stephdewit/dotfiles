@@ -1,5 +1,9 @@
 [user]
 	name = Stéphane de Wit
+[alias]
+	st = status -sb
+	up = pull
+	ci = commit
 [color]
 	branch = auto
 	diff = auto
