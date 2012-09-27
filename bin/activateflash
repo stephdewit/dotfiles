@@ -1,0 +1,16 @@
+#!/bin/sh
+
+versions="/Applications/Google Chrome.app/Contents/Versions"
+path="Google Chrome Framework.framework/Internet Plug-Ins/Flash Player Plugin for Chrome.plugin"
+
+plugin="$versions/$(ls "$versions" | tail -n 1)/$path"
+
+dest="$HOME/Library/Internet Plug-Ins/$(basename "$plugin")"
+
+if [ -L "$dest" ]; then
+	rm "$dest"
+fi
+
+if [ ! -f "$dest" -a "$1" != "-d" ]; then
+	ln -s "$plugin" "$dest"
+fi
