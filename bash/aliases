@@ -7,6 +7,7 @@ alias mongod.config="mongod run --config $(brew --prefix mongodb)/mongod.conf"
 alias v="mvim"
 alias jsc="/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc"
 alias longusername="osascript -e 'long user name of (system info)'"
+alias ql="qlmanage -p"
 
 serve() { python -m SimpleHTTPServer ${1:-8080}; }
 4chan() { curl $1 | grep -i "File<a href" | awk -F '<a href="' '{print $4}' | awk -F '" ' '{print $1}' | xargs wget; }
