@@ -11,4 +11,4 @@
 	interactive = auto
 	status = auto
 [include]
-	path = .secret/gitconfig
+	path = ~/.secret/gitconfig
