@@ -14,3 +14,5 @@
 	path = ~/.secret/gitconfig
 [core]
 	excludesfile = ~/.gitignore
+[push]
+	default = simple
