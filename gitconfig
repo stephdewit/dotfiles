@@ -12,3 +12,5 @@
 	status = auto
 [include]
 	path = ~/.secret/gitconfig
+[core]
+	excludesfile = ~/.gitignore
