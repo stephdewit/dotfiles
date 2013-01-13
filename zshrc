@@ -30,7 +30,9 @@ CASE_SENSITIVE="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git osx brew node npm yarn tmux golang vagrant)
+[ "$(uname)" = "Darwin" ] \
+	&& plugins=(git osx brew node npm yarn tmux golang vagrant) \
+	|| plugins=(git)
 
 # Load zplug
 if [ -d $HOME/.zplug ]; then
