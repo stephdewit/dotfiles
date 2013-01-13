@@ -1,5 +1,6 @@
 [user]
 	name = Stéphane de Wit
+	email = contact@stephanedewit.be
 [alias]
 	st = status -sb
 	di = diff
@@ -14,8 +15,6 @@
 	diff = auto
 	interactive = auto
 	status = auto
-[include]
-	path = ~/.secret/gitconfig
 [core]
 	excludesfile = ~/.gitignore
 	pager = less -F -X
