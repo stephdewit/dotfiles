@@ -1,0 +1,35 @@
+#!/bin/sh
+
+if [ "$1" == ftp ]; then
+	port=ftp
+	service=vsftpd
+elif [ "$1" == afp ]; then
+	port=afpovertcp
+	service=afpd
+else
+	echo "Unknown service" 1>&2
+	exit 1
+fi
+
+if [ "$2" != start -a "$2" != stop -a "$2" != status ]; then
+	echo "Unknown command" 1>&2
+	exit 1
+fi
+
+function isopen {
+	iptables -L | grep "^ACCEPT.*$port$" | wc -l
+}
+
+function getstatus {
+	/etc/init.d/$service status | sed -r "s/.+\b(.+)$/\1/"
+}
+
+if [ "$2" == status ]; then
+	if [ $(isopen) == 0 ]; then
+		echo "Port: closed"
+	else
+		echo "Port: open"
+	fi
+
+	echo "Service: $(getstatus)"
+fi
