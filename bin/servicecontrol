@@ -40,4 +40,12 @@ elif [ "$2" == start ]; then
 	if [ $(getstatus) == stopped ]; then
 		/etc/init.d/$service start
 	fi
+elif [ "$2" == stop ]; then
+	if [ $(isopen) == 1 ]; then
+		iptables -D INPUT -p tcp --dport $port -j ACCEPT
+	fi
+
+	if [ $(getstatus) == started ]; then
+		/etc/init.d/$service stop
+	fi
 fi
