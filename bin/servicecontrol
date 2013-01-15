@@ -32,4 +32,12 @@ if [ "$2" == status ]; then
 	fi
 
 	echo "Service: $(getstatus)"
+elif [ "$2" == start ]; then
+	if [ $(isopen) == 0 ]; then
+		iptables -I INPUT -p tcp --dport $port -j ACCEPT
+	fi
+
+	if [ $(getstatus) == stopped ]; then
+		/etc/init.d/$service start
+	fi
 fi
