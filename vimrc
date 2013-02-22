@@ -9,4 +9,6 @@ noremap <Down> <nop>
 noremap <Left> <nop>
 noremap <Right> <nop>
 
+map <F2> :nohl<CR>
+
 set smartindent
