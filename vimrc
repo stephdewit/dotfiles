@@ -4,6 +4,8 @@ set visualbell
 syntax on
 set relativenumber
 
+set colorcolumn=80
+
 noremap <Up> <nop>
 noremap <Down> <nop>
 noremap <Left> <nop>
