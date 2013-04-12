@@ -6,6 +6,9 @@ if [ "$1" == ftp ]; then
 elif [ "$1" == afp ]; then
 	port=afpovertcp
 	service=afpd
+elif [ "$1" == mysql ]; then
+	port=mysql
+	service=mysql
 else
 	echo "Unknown service" 1>&2
 	exit 1
