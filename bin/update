@@ -14,3 +14,9 @@ for repo in ${repositories[@]}
 do
 	(cd $HOME/$repo && git pull)
 done
+
+for rubyversion in $(rbenv versions --bare)
+do
+	RBENV_VERSION=$rubyversion gem update --system
+	RBENV_VERSION=$rubyversion gem update
+done
