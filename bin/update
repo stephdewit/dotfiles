@@ -2,10 +2,8 @@
 
 set -e
 
-softwareupdate --install --all
+sudo softwareupdate --install --all
 
-su $(logname) -c " \
-	brew update && \
-	brew upgrade && \
-	brew cleanup \
-"
+brew update
+brew upgrade
+brew cleanup
