@@ -20,3 +20,5 @@ do
 	RBENV_VERSION=$rubyversion gem update --system
 	RBENV_VERSION=$rubyversion gem update
 done
+
+npm update
