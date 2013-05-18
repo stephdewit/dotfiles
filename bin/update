@@ -7,3 +7,10 @@ sudo softwareupdate --install --all
 brew update
 brew upgrade
 brew cleanup
+
+repositories=( $HOME/.dotfiles )
+
+for repo in ${repositories[@]}
+do
+	(cd $repo && git pull)
+done
