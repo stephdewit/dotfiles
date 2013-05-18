@@ -3,3 +3,9 @@
 set -e
 
 softwareupdate --install --all
+
+su $(logname) -c " \
+	brew update && \
+	brew upgrade && \
+	brew cleanup \
+"
