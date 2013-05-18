@@ -19,6 +19,7 @@ for rubyversion in $(rbenv versions --bare)
 do
 	RBENV_VERSION=$rubyversion gem update --system
 	RBENV_VERSION=$rubyversion gem update
+	RBENV_VERSION=$rubyversion gem cleanup
 done
 
 npm update
