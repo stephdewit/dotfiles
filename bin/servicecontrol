@@ -5,7 +5,7 @@ if [ "$1" == ftp ]; then
 	service=vsftpd
 elif [ "$1" == afp ]; then
 	port=afpovertcp
-	service=afpd
+	service=netatalk
 elif [ "$1" == mysql ]; then
 	port=mysql
 	service=mysql
