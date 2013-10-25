@@ -8,6 +8,7 @@ alias v="mvim"
 alias jsc="/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc"
 alias longusername="osascript -e 'long user name of (system info)'"
 alias ql="qlmanage -p"
+alias tm="tmux attach || tmux"
 
 serve() { python -m SimpleHTTPServer ${1:-8080}; }
 4chan() { wget -H --no-directories -D images.4chan.org -r -l 1 -U Mozilla -A jpeg,jpg,png,gif -nc --wait 3 --random-wait -e robots=off $1 }
