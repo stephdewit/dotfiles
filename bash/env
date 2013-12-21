@@ -5,4 +5,4 @@ export CLICOLOR=
 
 export HOMEBREW_BUILD_FROM_SOURCE=
 
-export PATH=$PATH:~/.bin
+export PATH=/usr/local/bin:/usr/local/sbin:$PATH:~/.bin
