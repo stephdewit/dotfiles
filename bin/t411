@@ -1,1 +1,217 @@
-/Users/stephdewit/dev/misc/t411.rb
+#!/usr/bin/env ruby
+
+require 'yaml'
+require 'net/http'
+require 'json'
+
+BASE_URL = 'https://api.t411.me/'
+BASE_DIRECTORY = "#{Dir.home}/.secret/"
+TOKEN_FILE_PATH = BASE_DIRECTORY + 't411.token'
+CONFIG_FILE_PATH = BASE_DIRECTORY + 't411.yml'
+MIN_RATIO = 0.75
+
+def get_credentials
+	get_credentials_from_file || get_credentials_interactively
+end
+
+def get_credentials_from_file
+	return nil unless File.exists?(CONFIG_FILE_PATH)
+
+	config = YAML.load_file(CONFIG_FILE_PATH)
+	credentials = config['credentials']
+
+	return nil unless credentials
+
+	[credentials['username'], credentials['password']]
+end
+
+def get_credentials_interactively
+	raise 'Not implemented'
+end
+
+def get_token(renew = false)
+	token = get_token_from_file unless renew
+	return token if token
+
+	token = get_new_token
+	save_token_to_file(token)
+
+	token
+end
+
+def get_token_from_file
+	return nil unless File.exists?(TOKEN_FILE_PATH)
+	File.read(TOKEN_FILE_PATH)
+end
+
+def save_token_to_file(token)
+	File.open(TOKEN_FILE_PATH, 'w') { |f| f.write(token) }
+end
+
+class T411Error < RuntimeError
+	attr_reader :code, :description
+
+	def initialize(code, description)
+		super("#{description} (#{code})")
+		@code = code
+		@description = description
+	end
+
+	def self.create_instance(code, description)
+		case code / 100
+		when 1
+			UserError.new code, description
+		when 2
+			TokenError.new code, description
+		else
+			T411Error.new code, description
+		end
+	end
+end
+
+class TokenError < T411Error; end
+class UserError < T411Error; end
+
+def get_new_token
+	username, password = get_credentials
+
+	auth_response = Net::HTTP.post_form(
+		URI(BASE_URL + 'auth'),
+		'username' => username,
+		'password' => password)
+
+	unless auth_response.kind_of? Net::HTTPSuccess
+		raise 'HTTP error: ' + auth_response.message
+	end
+
+	auth_result = JSON.parse(auth_response.body)
+
+	if auth_result['error']
+		raise T411Error.create_instance(
+			auth_result['code'],
+			auth_result['error'])
+	end
+
+	auth_result['token']
+end
+
+def get_profile(token)
+	/^(?<user_id>\d+):/ =~ token
+
+	profile_uri = URI(BASE_URL + "users/profile/#{user_id}")
+	http = Net::HTTP.new(profile_uri.host, profile_uri.port)
+	http.use_ssl = (profile_uri.scheme == 'https')
+
+	profile_response = http.request_get(
+		profile_uri,
+		'Authorization' => token)
+
+	unless profile_response.kind_of? Net::HTTPSuccess
+		raise 'HTTP error: ' + profile_response.message
+	end
+
+	profile = JSON.parse(profile_response.body)
+
+	if profile['error']
+		raise T411Error.create_instance(
+			profile['code'],
+			profile['error'])
+	end
+
+	profile
+end
+
+class Formatter
+	def compute_ratio(downloaded, uploaded)
+		uploaded.to_f / downloaded
+	end
+
+	def compute_max_download_size(downloaded, uploaded)
+		(uploaded / MIN_RATIO - downloaded).floor
+	end
+
+	def get_hash(downloaded, uploaded)
+		ratio = compute_ratio(downloaded, uploaded)
+
+		max_download_size =
+			compute_max_download_size(downloaded, uploaded)
+
+		{
+			'uploaded' => uploaded,
+			'downloaded' => downloaded,
+			'ratio' => ratio,
+			'max_download_size' => max_download_size
+		}
+	end
+
+	def self.create_instance
+		return JsonFormatter.new if ARGV.include?('--json')
+		return YamlFormatter.new if ARGV.include?('--yaml')
+		return TtyFormatter.new if STDOUT.tty?
+
+		RedirectedFormatter.new
+	end
+end
+
+class TtyFormatter < Formatter
+	G = (2 ** 30).to_f
+
+	def format(downloaded, uploaded)
+		ratio = compute_ratio(downloaded, uploaded)
+
+		max_download_size =
+			compute_max_download_size(downloaded, uploaded)
+
+		"#{format_gigabytes(uploaded)} - " \
+		"#{format_gigabytes(downloaded)} - " \
+		"#{format_ratio(ratio)}:1 - " \
+		"#{format_gigabytes(max_download_size)}"
+	end
+
+	def format_gigabytes(bytes)
+		(bytes / G).round(2).to_s + ' GB'
+	end
+
+	def format_ratio(ratio)
+		truncated = (ratio * 100).floor / 100.to_f
+		'%.2f' % truncated
+	end
+end
+
+class RedirectedFormatter < Formatter
+	def format(downloaded, uploaded)
+		hash = get_hash(downloaded, uploaded)
+		hash.values.join("\t")
+	end
+end
+
+class JsonFormatter < Formatter
+	def format(downloaded, uploaded)
+		hash = get_hash(downloaded, uploaded)
+		JSON.pretty_generate(hash)
+	end
+end
+
+class YamlFormatter < Formatter
+	def format(downloaded, uploaded)
+		hash = get_hash(downloaded, uploaded)
+		hash.to_yaml
+	end
+end
+
+renew_token = false
+
+begin
+	token = get_token(renew_token)
+	profile = get_profile(token)
+rescue TokenError
+	raise if renew_token
+	renew_token = true
+	retry
+end
+
+downloaded = profile['downloaded'].to_i
+uploaded = profile['uploaded'].to_i
+
+formatter = Formatter.create_instance
+puts formatter.format(downloaded, uploaded)
