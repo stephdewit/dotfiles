@@ -1,4 +1,5 @@
 #!/bin/sh
 
 esd -terminate &
+sleep 2
 esdrec -s localhost | ssh root@butters /volume1/@appstore/AudioStation/bin/mplayer -demuxer rawaudio -
