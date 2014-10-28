@@ -22,4 +22,4 @@ do
 	RBENV_VERSION=$rubyversion gem cleanup
 done
 
-npm update -g
+npm --quiet install -g npm@latest
