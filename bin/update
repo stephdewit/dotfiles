@@ -4,7 +4,7 @@ set -e
 
 sudo softwareupdate --install --all
 
-brew update
+brew update --all
 brew upgrade
 brew cleanup
 
