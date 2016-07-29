@@ -1,0 +1,33 @@
+#!/bin/sh
+
+set -e
+
+for file in "$@"; do
+	extension=${file##*.}
+	if [ "$extension" != "mkv" ] && [ "$extension" != "mp4" ]; then
+		continue
+	fi
+
+	source="_$file"
+	if [ -f "$source" ]; then
+		echo "$source already exists"
+		continue
+	fi
+
+	srtfile="${file%%.$extension}.srt"
+	if [ ! -f "$srtfile" ]; then
+		echo "$srtfile is missing"
+		continue
+	fi
+
+	mv "$file" "$source"
+
+	if [ "$extension" = "mkv" ]; then
+		mkvmerge -o "$file" "$source" --language 0:fr --default-track 0:true "$srtfile"
+	else
+		MP4Box -add "$srtfile":lang=fr "$source" -out "$file"
+	fi
+
+	touch -r "$source" "$file"
+	rm "$source" "$srtfile"
+done
