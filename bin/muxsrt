@@ -20,6 +20,11 @@ for file in "$@"; do
 		continue
 	fi
 
+	if [ "$(file --brief --mime-encoding $srtfile)" != "utf-8" ]; then
+		echo "$srtfile isn't UTF-8"
+		continue
+	fi
+
 	mv "$file" "$source"
 
 	if [ "$extension" = "mkv" ]; then
