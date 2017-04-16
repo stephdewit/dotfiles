@@ -20,7 +20,7 @@ if [ "$2" != start -a "$2" != stop -a "$2" != status ]; then
 fi
 
 function isopen {
-	iptables -L | grep "^ACCEPT.*$port$" | wc -l
+	sudo iptables -L | grep "^ACCEPT.*$port$" | wc -l
 }
 
 function getstatus {
