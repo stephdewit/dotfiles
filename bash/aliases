@@ -14,6 +14,7 @@ serve() { python -m SimpleHTTPServer ${1:-8080}; }
 4chan() { wget -e robots=off -nvcdp -t 0 -Hkrl 0 -I \*/src/ -P . "$1" }
 checkdyndns() { echo ' ' $(extip 2>/dev/null); echo "=="; echo ' ' $(dig home.stephanedewit.be +short | tail -n 1) $(dig home.stephanedewit.be CNAME +short); echo "=="; for i in {1..6}; do echo $i $(dig $i.home.stephanedewit.be +short | tail -n 1) $(dig $i.home.stephanedewit.be CNAME +short); done; }
 shuffle() { perl -MList::Util=shuffle -e 'print shuffle(<>);' }
+minipng() { pngcrush -brute -rem alla -rem text $1 $2 && ls -lh $1 $2 && optipng -o7 -strip all $2 && ls -lh $1 $2 }
 
 debughttp () {
 	/usr/bin/curl $@ \
