@@ -67,6 +67,7 @@ fi
 export GOPATH=$HOME/Sources/go
 export PATH=$PATH:$(go env GOPATH)/bin
 
+[ "$(uname)" = "Linux" ] && alias ls="ls --color=tty -N"
 alias aws="PAGER='' aws"
 
 export NVM_DIR="$HOME/.nvm"
