@@ -5,7 +5,7 @@ set -e
 sudo softwareupdate --install --all
 
 brew update
-brew upgrade --all
+brew upgrade
 brew cleanup
 
 repositories=( .dotfiles .rbenv .rbenv/plugins/ruby-build .oh-my-zsh )
