@@ -15,6 +15,7 @@
 	path = ~/.secret/gitconfig
 [core]
 	excludesfile = ~/.gitignore
+	pager = less -F -X
 [push]
 	default = simple
 [diff]
