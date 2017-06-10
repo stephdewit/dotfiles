@@ -1,0 +1,3 @@
+[submodule "thirdparty/ntfy"]
+	path = thirdparty/ntfy
+	url = https://github.com/stephdewit/ntfy.git
