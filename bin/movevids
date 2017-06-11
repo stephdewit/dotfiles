@@ -20,20 +20,37 @@ for f in *.*; do
 		continue
 	fi
 
-	pixels=$(mediainfo --Output="Video;%Width%*%Height%" "$f" | bc)
+	dimensions=$(mediainfo --Output="Video;%Width%*%Height%" "$f")
+	pixels=$(echo $dimensions | bc)
+	width=$(echo $dimensions | grep -o "^[0-9]\+")
+	height=$(echo $dimensions | grep -o "[0-9]\+$")
 
 	if [ "$pixels" == "" ]; then
 		echo "$f: can't count pixels"
 		continue
 	fi
 
-	if [ $pixels -lt 100000 ]; then
+	if [ "$width" == "" ]; then
+		echo "$f: can't get width"
+		continue
+	fi
+
+	if [ "$height" == "" ]; then
+		echo "$f: can't get height"
+		continue
+	fi
+
+	if [ $width -eq 1920 -o $height -eq 1080 ]; then
+		folder="1080p"
+	elif [ $width -eq 1280 -o $height -eq 720 ]; then
+		folder="720p"
+	elif [ $pixels -lt 100000 ]; then
 		folder="Very Small"
 	elif [ $pixels -lt 200000 ]; then
 		folder="Small"
 	elif [ $pixels -lt 300000 ]; then
 		folder="Medium"
-	elif [ $pixels -lt 500000 ]; then
+	elif [ $pixels -lt 900000 ]; then
 		folder="Large"
 	else
 		folder="Huge"
