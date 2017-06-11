@@ -20,7 +20,7 @@ for file in "$@"; do
 		continue
 	fi
 
-	if [ "$(file --brief --mime-encoding $srtfile)" != "utf-8" ]; then
+	if [ "$(file --brief --mime-encoding "$srtfile")" != "utf-8" ]; then
 		echo "$srtfile isn't UTF-8"
 		continue
 	fi
