@@ -4,6 +4,8 @@ set -e
 
 sudo softwareupdate --install --all
 
+mas upgrade
+
 brew update
 brew upgrade
 brew cleanup
