@@ -4,7 +4,7 @@ set -e
 
 for file in "$@"; do
 	extension=${file##*.}
-	if [ "$extension" != "mkv" ] && [ "$extension" != "mp4" ]; then
+	if [ "$extension" != "mkv" ] && [ "$extension" != "mp4" ] && [ "$extension" != "avi" ]; then
 		continue
 	fi
 
@@ -28,12 +28,14 @@ for file in "$@"; do
 
 	mv "$file" "$source"
 
-	if [ "$extension" = "mkv" ]; then
-		mkvmerge -o "$file" "$source" --language 0:fr --default-track 0:true "$srtfile"
+	if [ "$extension" = "mkv" ] || [  "$extension" = "avi" ]; then
+		outfile="${file%%.$extension}.mkv"
+		mkvmerge -o "$outfile" "$source" --language 0:fr --default-track 0:true "$srtfile"
 	else
-		MP4Box -add "$srtfile":lang=fr "$source" -out "$file"
+		outfile="$file"
+		MP4Box -add "$srtfile":lang=fr "$source" -out "$outfile"
 	fi
 
-	touch -r "$source" "$file"
+	touch -r "$source" "$outfile"
 	rm "$source" "$srtfile"
 done
