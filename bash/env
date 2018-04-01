@@ -3,7 +3,7 @@ export MPD_HOST=butters.lan
 export HISTIGNORE="&:ls:cd:exit"
 export CLICOLOR=
 
-export HOMEBREW_BUILD_FROM_SOURCE=
+export HOMEBREW_BUILD_FROM_SOURCE=1
 export HOMEBREW_NO_ANALYTICS=1
 
 export KUBECONFIG=$HOME/.kube/config
