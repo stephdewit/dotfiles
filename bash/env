@@ -6,4 +6,6 @@ export CLICOLOR=
 export HOMEBREW_BUILD_FROM_SOURCE=
 export HOMEBREW_NO_ANALYTICS=1
 
+export KUBECONFIG=$HOME/.kube/config
+
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH:~/.bin:~/dev/misc
