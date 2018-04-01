@@ -8,6 +8,18 @@ mas upgrade
 
 brew update
 brew upgrade
+
+set +e
+brew cask outdated | grep -q ^
+grepresult=$?
+set -e
+
+if [[ $grepresult -eq 0 ]]; then
+	brew cask reinstall $(brew cask outdated)
+else
+	echo No Cask updates are available.
+fi
+
 brew cleanup
 
 repositories=( .dotfiles .rbenv .rbenv/plugins/ruby-build .oh-my-zsh )
