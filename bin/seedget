@@ -4,10 +4,11 @@ set -e
 
 limit=292K
 
-while getopts ":l:p" opt; do
+while getopts ":l:pc" opt; do
 	case $opt in
 		l ) limit=$OPTARG;;
 		p ) pretend=n;;
+		c ) checksum=c;;
 		: ) echo "-$OPTARG requires an argument" >&2; exit 1;;
 		\?) echo "Invalid option: -$OPTARG" >&2; exit 1;;
 	esac
@@ -15,7 +16,7 @@ done
 
 shift $(($OPTIND - 1))
 
-command="rsync -avhP$pretend --bwlimit=$limit --timeout=20"
+command="rsync -avhP$pretend$checksum --bwlimit=$limit --timeout=20"
 
 for pattern in "$@"; do
 	command="$command 'jimbo:torrent/data/$pattern'"
