@@ -9,4 +9,5 @@ export HOMEBREW_NO_ANALYTICS=1
 export LIBVIRT_DEFAULT_URI=qemu+ssh://cartman/system?socket=/var/run/libvirt/libvirt-sock
 export KUBECONFIG=$HOME/.kube/config
 
+export GOPATH=$HOME/dev/go
 export PATH=~/.bin:~/.local/bin:~/dev/misc:/usr/local/bin:/usr/local/sbin:$PATH
