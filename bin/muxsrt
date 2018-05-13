@@ -23,7 +23,10 @@ for file in "$@"; do
 	srtencoding=$(file --brief --mime-encoding "$srtfile")
 	if [ "$srtencoding" != "utf-8" ]; then
 		echo "$srtfile isn't UTF-8 but $srtencoding"
-		continue
+
+		if [ "$srtencoding" != "us-ascii" ]; then
+			continue
+		fi
 	fi
 
 	mv "$file" "$source"
