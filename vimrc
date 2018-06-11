@@ -3,6 +3,7 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'scrooloose/nerdtree'
 call vundle#end()
 filetype plugin indent on
 
@@ -20,6 +21,7 @@ noremap <Left> <nop>
 noremap <Right> <nop>
 
 map <F2> :nohl<CR>
+map <C-n> :NERDTreeToggle<CR>
 
 set smartindent
 set tabstop=4
