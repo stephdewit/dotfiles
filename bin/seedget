@@ -24,6 +24,7 @@ done
 
 command="$command ."
 
-while ! eval $command; do
+until eval $command; do
+	[ $? -ne 20 ] || exit 1
 	sleep 120
 done
