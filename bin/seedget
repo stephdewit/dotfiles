@@ -3,7 +3,7 @@
 set -e
 
 limit=292K
-path=torrent/data
+path=data
 
 while getopts ":l:pcd" opt; do
 	case $opt in
@@ -21,7 +21,7 @@ shift $(($OPTIND - 1))
 command="rsync -avhP$pretend$checksum --bwlimit=$limit --timeout=20"
 
 for pattern in "$@"; do
-	command="$command 'jimbo:$path/$pattern'"
+	command="$command 'jimbo:torrent/$path/$pattern'"
 done
 
 command="$command ."
