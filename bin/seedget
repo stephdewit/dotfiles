@@ -21,7 +21,7 @@ shift $(($OPTIND - 1))
 command="rsync -avhP$pretend$checksum --bwlimit=$limit --timeout=20"
 
 for pattern in "$@"; do
-	command="$command 'jimbo:torrent/$path/$pattern'"
+	command="$command 'jimbo-with-nagle:torrent/$path/$pattern'"
 done
 
 command="$command ."
