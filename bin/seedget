@@ -4,13 +4,15 @@ set -e
 
 limit=292K
 path=data
+verbosity=0
 
-while getopts ":l:pcd" opt; do
+while getopts ":l:pcdv" opt; do
 	case $opt in
 		l ) limit=$OPTARG;;
 		p ) pretend=n;;
 		c ) checksum=c;;
 		d ) path=downloads;;
+		v ) verbosity=$(($verbosity + 1));;
 		: ) echo "-$OPTARG requires an argument" >&2; exit 1;;
 		\?) echo "Invalid option: -$OPTARG" >&2; exit 1;;
 	esac
@@ -18,13 +20,23 @@ done
 
 shift $(($OPTIND - 1))
 
-command="rsync -avhP$pretend$checksum --bwlimit=$limit --timeout=20"
+if [ $verbosity -eq 2 ]; then
+	verbose=v
+elif [ $verbosity -gt 2 ]; then
+	verbose=vv
+fi
+
+command="rsync -avhP$pretend$checksum$verbose --bwlimit=$limit --timeout=20"
 
 for pattern in "$@"; do
 	command="$command 'jimbo-with-nagle:torrent/$path/$pattern'"
 done
 
 command="$command ."
+
+if [ $verbosity -ge 1 ]; then
+	echo $command
+fi
 
 until eval $command; do
 	[ $? -ne 20 ] || exit 1
