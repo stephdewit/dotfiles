@@ -22,18 +22,18 @@ done
 
 shift $(($OPTIND - 1))
 
-rsync_options=-avhP$pretend$checksum
+rsync_opt=-avhP$pretend$checksum
 
 if [ $verbosity -eq 2 ]; then
-	rsync_options=${rsync_options}v
+	rsync_opt=${rsync_opt}v
 elif [ $verbosity -gt 2 ]; then
-	rsync_options=${rsync_options}vv
+	rsync_opt=${rsync_opt}vv
 fi
 
 [ $nagle_enabled -eq 1 ] && nagle=" -o 'ProxyCommand nc %h %p'"
 rsh="-e \"ssh$nagle\""
 
-command="rsync $rsync_options $rsh --bwlimit=$limit --timeout=20"
+command="rsync $rsync_opt $rsh --bwlimit=$limit --timeout=20"
 
 for pattern in "$@"; do
 	command="$command 'jimbo:torrent/$path/$pattern'"
