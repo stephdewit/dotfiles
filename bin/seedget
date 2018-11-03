@@ -4,14 +4,16 @@ set -e
 
 limit=292K
 path=data
+nagle="-e 'ssh -o \"ProxyCommand nc %h %p\"' "
 verbosity=0
 
-while getopts ":l:pcdv" opt; do
+while getopts ":l:pcdNv" opt; do
 	case $opt in
 		l ) limit=$OPTARG;;
 		p ) pretend=n;;
 		c ) checksum=c;;
 		d ) path=downloads;;
+		N ) nagle=;;
 		v ) verbosity=$(($verbosity + 1));;
 		: ) echo "-$OPTARG requires an argument" >&2; exit 1;;
 		\?) echo "Invalid option: -$OPTARG" >&2; exit 1;;
@@ -26,10 +28,10 @@ elif [ $verbosity -gt 2 ]; then
 	verbose=vv
 fi
 
-command="rsync -avhP$pretend$checksum$verbose --bwlimit=$limit --timeout=20"
+command="rsync -avhP$pretend$checksum$verbose $nagle--bwlimit=$limit --timeout=20"
 
 for pattern in "$@"; do
-	command="$command 'jimbo-with-nagle:torrent/$path/$pattern'"
+	command="$command 'jimbo:torrent/$path/$pattern'"
 done
 
 command="$command ."
