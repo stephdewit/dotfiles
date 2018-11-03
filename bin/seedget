@@ -28,9 +28,10 @@ elif [ $verbosity -gt 2 ]; then
 	verbose=vv
 fi
 
-[ $nagle_enabled -eq 1 ] && nagle="-e 'ssh -o \"ProxyCommand nc %h %p\"' "
+[ $nagle_enabled -eq 1 ] && nagle=" -o 'ProxyCommand nc %h %p'"
+rsh="-e \"ssh$nagle\""
 
-command="rsync -avhP$pretend$checksum$verbose $nagle--bwlimit=$limit --timeout=20"
+command="rsync -avhP$pretend$checksum$verbose $rsh --bwlimit=$limit --timeout=20"
 
 for pattern in "$@"; do
 	command="$command 'jimbo:torrent/$path/$pattern'"
