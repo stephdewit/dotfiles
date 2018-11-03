@@ -7,7 +7,7 @@ path=data
 nagle_enabled=1
 verbosity=0
 
-while getopts ":l:pcdNv" opt; do
+while getopts ":l:pcdNvq" opt; do
 	case $opt in
 		l ) limit=$OPTARG;;
 		p ) pretend=n;;
@@ -15,6 +15,7 @@ while getopts ":l:pcdNv" opt; do
 		d ) path=downloads;;
 		N ) nagle_enabled=0;;
 		v ) verbosity=$(($verbosity + 1));;
+		q ) verbosity=$(($verbosity - 1));;
 		: ) echo "-$OPTARG requires an argument" >&2; exit 1;;
 		\?) echo "Invalid option: -$OPTARG" >&2; exit 1;;
 	esac
@@ -22,16 +23,24 @@ done
 
 shift $(($OPTIND - 1))
 
-rsync_opt=-avhP$pretend$checksum
+[ $verbosity -ge 1 ] && nc_opt=" -v"
+[ $verbosity -ge 3 ] && nc_opt=${nc_opt}v
 
-if [ $verbosity -eq 2 ]; then
-	rsync_opt=${rsync_opt}v
-elif [ $verbosity -gt 2 ]; then
-	rsync_opt=${rsync_opt}vv
-fi
+[ $nagle_enabled -eq 1 ] && nagle=" -o 'ProxyCommand nc$nc_opt %h %p'"
 
-[ $nagle_enabled -eq 1 ] && nagle=" -o 'ProxyCommand nc %h %p'"
-rsh="-e \"ssh$nagle\""
+[ $verbosity -ge 1 ] && ssh_opt=" -v"
+[ $verbosity -ge 2 ] && ssh_opt=${ssh_opt}v
+[ $verbosity -ge 3 ] && ssh_opt=${ssh_opt}v
+
+rsh="-e \"ssh$ssh_opt$nagle\""
+
+rsync_opt="--partial -rth$pretend$checksum"
+
+[ $verbosity -le -2 ] && rsync_opt=${rsync_opt}q
+[ $verbosity -ge 0 ] && rsync_opt=${rsync_opt}v
+[ $verbosity -ge 0 -a $verbosity -lt 2 ] && rsync_opt="--progress $rsync_opt"
+[ $verbosity -ge 1 ] && rsync_opt=${rsync_opt}vi
+[ $verbosity -ge 3 ] && rsync_opt=${rsync_opt}v
 
 command="rsync $rsync_opt $rsh --bwlimit=$limit --timeout=20"
 
