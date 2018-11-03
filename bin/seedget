@@ -36,9 +36,7 @@ done
 
 command="$command ."
 
-if [ $verbosity -ge 1 ]; then
-	echo $command
-fi
+[ $verbosity -ge 1 ] && echo $command
 
 until eval $command; do
 	[ $? -ne 20 ] || exit 1
