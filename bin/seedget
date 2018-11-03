@@ -4,7 +4,7 @@ set -e
 
 limit=292K
 path=data
-nagle="-e 'ssh -o \"ProxyCommand nc %h %p\"' "
+nagle_enabled=1
 verbosity=0
 
 while getopts ":l:pcdNv" opt; do
@@ -13,7 +13,7 @@ while getopts ":l:pcdNv" opt; do
 		p ) pretend=n;;
 		c ) checksum=c;;
 		d ) path=downloads;;
-		N ) nagle=;;
+		N ) nagle_enabled=0;;
 		v ) verbosity=$(($verbosity + 1));;
 		: ) echo "-$OPTARG requires an argument" >&2; exit 1;;
 		\?) echo "Invalid option: -$OPTARG" >&2; exit 1;;
@@ -27,6 +27,8 @@ if [ $verbosity -eq 2 ]; then
 elif [ $verbosity -gt 2 ]; then
 	verbose=vv
 fi
+
+[ $nagle_enabled -eq 1 ] && nagle="-e 'ssh -o \"ProxyCommand nc %h %p\"' "
 
 command="rsync -avhP$pretend$checksum$verbose $nagle--bwlimit=$limit --timeout=20"
 
