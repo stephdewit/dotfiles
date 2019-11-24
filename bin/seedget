@@ -2,14 +2,15 @@
 
 set -e
 
-limit=292K
+limit=--bwlimit=292K
 path=data
 nagle_enabled=1
 verbosity=0
 
-while getopts ":l:pcdNvq" opt; do
+while getopts ":l:LpcdNvq" opt; do
 	case $opt in
-		l ) limit=$OPTARG;;
+		l ) limit=--bwlimit=$OPTARG;;
+		L ) limit=;;
 		p ) pretend=n;;
 		c ) checksum=c;;
 		d ) path=downloads;;
@@ -42,7 +43,7 @@ rsync_opt="--partial -rth$pretend$checksum"
 [ $verbosity -ge 1 ] && rsync_opt=${rsync_opt}vi
 [ $verbosity -ge 3 ] && rsync_opt=${rsync_opt}v
 
-command="rsync $rsync_opt $rsh --bwlimit=$limit --timeout=20"
+command="rsync $rsync_opt $rsh $limit --timeout=20"
 
 for pattern in "$@"; do
 	command="$command 'jimbo:torrent/$path/$pattern'"
