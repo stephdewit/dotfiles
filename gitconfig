@@ -32,3 +32,5 @@
 	prompt = false
 [mergetool]
 	prompt = false
+[url "git@bitbucket.org:stephdewit/"]
+	insteadOf = bb:
