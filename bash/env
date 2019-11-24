@@ -9,4 +9,4 @@ export LIBVIRT_DEFAULT_URI=qemu+ssh://cartman/system?socket=/var/run/libvirt/lib
 export KUBECONFIG=$HOME/.kube/config
 
 export GOPATH=$HOME/dev/go
-export PATH=~/.bin:~/.local/bin:~/dev/misc:/usr/local/bin:/usr/local/sbin:$PATH
+export PATH=~/.bin:~/.local/bin:~/dev/misc:/usr/local/bin:/usr/local/sbin:$PATH:$(go env GOPATH)/bin
