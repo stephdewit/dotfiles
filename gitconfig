@@ -4,6 +4,7 @@
 	st = status -sb
 	di = diff
 	up = pull
+	prb = pull --rebase
 	ci = commit
 	br = branch
 	co = checkout
