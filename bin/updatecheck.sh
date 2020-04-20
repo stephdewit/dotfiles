@@ -13,4 +13,10 @@ if [ "$count" -gt 0 ]; then
 	subject="[$(hostname)] $count update$plural available ($size)"	
 
 	echo "$result" | mail -s "$subject" stephdewit
+
+	ifttt \
+		update_available \
+		"$(hostname)" \
+		"$count package$plural ($size)" \
+		"$result"
 fi
