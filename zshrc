@@ -41,5 +41,5 @@ source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 unsetopt HIST_VERIFY
-source $HOME/.bash/aliases
-source $HOME/.bash/env
+#source $HOME/.bash/aliases
+#source $HOME/.bash/env
