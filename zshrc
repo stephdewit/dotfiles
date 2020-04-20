@@ -43,3 +43,6 @@ source $ZSH/oh-my-zsh.sh
 unsetopt HIST_VERIFY
 #source $HOME/.bash/aliases
 #source $HOME/.bash/env
+
+export GOPATH=$HOME/Sources/go
+export PATH=$PATH:$(go env GOPATH)/bin
