@@ -31,6 +31,12 @@ CASE_SENSITIVE="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(git osx brew ruby rake gem node npm tmux golang aws)
 
+# Enable Ctrl-x-e to edit command line
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '^xe' edit-command-line
+bindkey '^x^e' edit-command-line
+
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
