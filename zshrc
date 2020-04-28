@@ -44,8 +44,8 @@ source $ZSH/oh-my-zsh.sh
 # Customize to your needs...
 [ "$(uname)" = "Linux" ] && LC_CTYPE=en_US.UTF8
 unsetopt HIST_VERIFY
-#source $HOME/.bash/aliases
-#source $HOME/.bash/env
+source $HOME/.bash/aliases
+source $HOME/.bash/env
 
 export GOPATH=$HOME/Sources/go
 export PATH=$PATH:$(go env GOPATH)/bin
