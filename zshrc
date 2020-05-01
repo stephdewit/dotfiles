@@ -31,6 +31,14 @@ CASE_SENSITIVE="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(git osx brew node npm yarn tmux golang vagrant)
 
+# Load zplug
+export ZPLUG_HOME=/usr/local/opt/zplug
+source $ZPLUG_HOME/init.zsh
+
+zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
+
+zplug load
+
 # Enable Ctrl-x-e to edit command line
 autoload -U edit-command-line
 zle -N edit-command-line
