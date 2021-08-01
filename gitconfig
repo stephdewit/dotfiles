@@ -3,7 +3,6 @@
 [alias]
 	st = status -sb
 	di = diff
-	up = pull
 	prb = pull --rebase
 	pwl = push --force-with-lease
 	ci = commit
