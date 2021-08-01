@@ -25,6 +25,7 @@
 	tool = Kaleidoscope
 [merge]
 	tool = Kaleidoscope
+	ff = only
 [mergetool "Kaleidoscope"]
 	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
 	trustexitcode = true
@@ -36,3 +37,6 @@
 	prompt = false
 [url "git@bitbucket.org:stephdewit/"]
 	insteadOf = bb:
+[pull]
+	rebase = false
+	ff = only
