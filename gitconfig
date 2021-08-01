@@ -5,12 +5,14 @@
 	di = diff
 	up = pull
 	prb = pull --rebase
+	pwl = push --force-with-lease
 	ci = commit
 	br = branch
 	co = checkout
 	mg = merge
 	rb = rebase
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
+	prbr = !git remote prune ${1-origin} && git branch --verbose | awk -F ' ' '/\\[gone\\]/ { print $1 }' | xargs -r git branch --delete
 [color]
 	branch = auto
 	diff = auto
