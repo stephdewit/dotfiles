@@ -55,6 +55,8 @@ unsetopt HIST_VERIFY
 export GOPATH=$HOME/Sources/go
 export PATH=$PATH:$(go env GOPATH)/bin
 
+alias aws="PAGER='' aws"
+
 export NVM_DIR="$HOME/.nvm"
 function load_nvm {
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
