@@ -32,7 +32,12 @@ CASE_SENSITIVE="true"
 plugins=(git osx brew node npm yarn tmux golang vagrant)
 
 # Load zplug
-export ZPLUG_HOME=/usr/local/opt/zplug
+if [ -d $HOME/.zplug ]; then
+	export ZPLUG_HOME=$HOME/.zplug
+else
+	export ZPLUG_HOME=/usr/local/opt/zplug
+fi
+
 source $ZPLUG_HOME/init.zsh
 
 zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
