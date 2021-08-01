@@ -8,6 +8,7 @@ Plugin 'albfan/nerdtree-git-plugin'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'micha/vim-colors-solarized'
 Plugin 'editorconfig/editorconfig-vim'
+Plugin 'dense-analysis/ale'
 call vundle#end()
 filetype plugin indent on
 
