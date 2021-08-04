@@ -5,7 +5,12 @@ export CLICOLOR=
 
 export HOMEBREW_NO_ANALYTICS=1
 
-export LIBVIRT_DEFAULT_URI=qemu+ssh://cartman/system?socket=/var/run/libvirt/libvirt-sock
+if [ "$(hostname)" == "cartman" ]; then
+	export LIBVIRT_DEFAULT_URI=qemu:///system
+else
+	export LIBVIRT_DEFAULT_URI=qemu+ssh://cartman/system?socket=/var/run/libvirt/libvirt-sock
+fi
+
 export KUBECONFIG=$HOME/.kube/config
 
 export GOPATH=$HOME/dev/go
