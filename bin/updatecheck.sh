@@ -3,11 +3,11 @@
 sudo emerge --sync -q
 result=$(emerge -puvND --with-bdeps=y world)
 
-count=$(echo $result | grep -oP '\d+(?= package)')
+count=$(echo "$result" | grep -oP '\d+(?= package)')
 
 if [ "$count" -gt 0 ]; then
 	size=$( \
-		echo $result | \
+		echo "$result" | \
 		grep -oP '(?<=Size of downloads: )[\d,]+ [a-zA-Z]+')
 
 	plural='s'
