@@ -12,7 +12,7 @@ if [ "$count" -gt 0 ]; then
 
 	plural='s'
 	[ "$count" -eq 1 ] && plural=''
-	subject="[$(hostname)] $count update$plural available ($size)"	
+	subject="[$(hostname)] $count update$plural available ($size)"
 
 	echo "$result" | mail -s "$subject" stephdewit
 
