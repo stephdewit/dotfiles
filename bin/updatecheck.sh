@@ -1,3 +1,5 @@
+#!/bin/sh
+
 sudo emerge --sync -q
 result=$(emerge -puvND --with-bdeps=y world)
 
