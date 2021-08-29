@@ -15,6 +15,7 @@ serve() { python -m SimpleHTTPServer ${1:-8080}; }
 4chan() { wget -e robots=off -nvcdp -t 0 -Hkrl 0 -I \*/src/ -P . "$1" }
 shuffle() { perl -MList::Util=shuffle -e 'print shuffle(<>);' }
 minipng() { pngcrush -reduce -brute -rem alla -rem text $1 $2 && ls -lh $1 $2 && optipng -o7 -strip all $2 && ls -lh $1 $2 }
+unzar() { find -name '*.zip' -exec sh -c 'unzip -d $(dirname "{}") "{}" "*.r??"' \; && find -name "*.rar" -exec unrar x {} \; }
 
 checkdyndns() {
 	echo ' ' $(extip 2>/dev/null)
