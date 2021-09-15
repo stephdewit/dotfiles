@@ -32,7 +32,7 @@ CASE_SENSITIVE="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 [ "$(uname)" = "Darwin" ] \
 	&& plugins=(git osx brew node npm yarn tmux golang vagrant) \
-	|| plugins=(git tmux docker docker-compose)
+	|| plugins=(git tmux docker docker-compose terraform)
 
 # Load zplug
 if [ -d $HOME/.zplug ]; then
