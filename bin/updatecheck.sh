@@ -1,7 +1,7 @@
 #!/bin/sh
 
 sudo emerge --sync -q
-result=$(emerge -puvND --with-bdeps=y world)
+result=$(emerge -puvND --with-bdeps=y world 2>&1)
 
 count=$(echo "$result" | grep -oP '\d+(?= package)')
 
