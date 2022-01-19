@@ -12,6 +12,7 @@
 	rb = rebase
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset' --abbrev-commit --
 	prbr = !git remote prune ${1-origin} && git branch --verbose | awk -F ' ' '/\\[gone\\]/ { print $1 }' | xargs -r git branch --delete
+	head = rev-parse --verify --short HEAD
 [color]
 	branch = auto
 	diff = auto
