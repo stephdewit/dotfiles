@@ -17,6 +17,16 @@ shuffle() { perl -MList::Util=shuffle -e 'print shuffle(<>);' }
 minipng() { pngcrush -reduce -brute -rem alla -rem text $1 $2 && ls -lh $1 $2 && optipng -o7 -strip all $2 && ls -lh $1 $2 }
 unzar() { find -name '*.zip' -exec sh -c 'unzip -d $(dirname "{}") "{}" "*.r??"' \; && find -name "*.rar" -exec unrar x {} \; }
 
+kimsufi() {
+	endpoint='https://www.ovh.com/engine/api/dedicated/server/availabilities?country=fr'
+
+	curl -sS $endpoint | \
+	jq -r \
+		--arg hardware ${1:-2201sk011} \
+		--arg region ${2-europe} \
+		'.[] | select(.hardware == $hardware and .region == $region) | .datacenters | .[] | select(.datacenter == "default") | .availability'
+}
+
 checkdyndns() {
 	echo ' ' $(extip 2>/dev/null)
 	echo "=="
