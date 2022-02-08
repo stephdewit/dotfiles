@@ -62,10 +62,10 @@ unsetopt HIST_VERIFY
 if [ "$(uname)" = "Linux" ]; then
 	source $HOME/.bash/aliases
 	source $HOME/.bash/env
+else
+	export GOPATH=$HOME/Sources/go
+	export PATH=$PATH:$(go env GOPATH)/bin
 fi
-
-export GOPATH=$HOME/Sources/go
-export PATH=$PATH:$(go env GOPATH)/bin
 
 [ "$(uname)" = "Linux" ] && alias ls="ls --color=tty -N"
 alias aws="PAGER='' aws"
