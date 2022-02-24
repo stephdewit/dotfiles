@@ -27,6 +27,7 @@
 	default = simple
 [diff]
 	tool = Kaleidoscope
+	wsErrorHighlight = all
 [merge]
 	tool = Kaleidoscope
 	ff = only
