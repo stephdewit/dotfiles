@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+if [ "$1" = "--mailformat" ]; then
+	echo From: noreply@stephanedewit.be
+	echo To: contact@stephanedewit.be
+	echo Subject: TLS Certificates Check
+	echo
+fi
+
+for host in 'www.stephanedewit.be' 'tweek.stephanedewit.be' 'home.stephanedewit.be' 'files.stephanedewit.be'; do
+	date=$(echo | \
+		openssl s_client -connect $host:443 -servername $host 2>/dev/null | \
+		openssl x509 -noout -enddate | \
+		sed 's/notAfter=//'
+	)
+
+	echo "$host\t$date"
+done
