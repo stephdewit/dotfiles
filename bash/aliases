@@ -23,7 +23,7 @@ checkdyndns() {
 	echo "=="
 	echo ' ' $(dig home.sdw.host +short | tail -n 1) $(dig home.sdw.host CNAME +short)
 	echo "=="
-	for i in {1..6}; do
+	for i in {2..6}; do
 		echo $i $(dig $i.home.sdw.host +short | tail -n 1) $(dig $i.home.sdw.host CNAME +short)
 	done
 }
