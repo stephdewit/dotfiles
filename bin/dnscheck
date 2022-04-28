@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+import socket
+import hashlib
+from urllib.request import urlopen
+
+class Host:
+	def __init__(self, index):
+		self.index = index
+		self.ipaddresscache = None
+		self.validitycheck = ValidityCheck()
+
+	def hostname(self):
+		return str(self.index) + '.home.sdw.host'
+
+	def ipaddress(self):
+		if self.ipaddresscache is None:
+			self.ipaddresscache = socket.gethostbyname(self.hostname())
+
+		return self.ipaddresscache
+
+	def __str__(self):
+		return self.hostname() + '\t' + self.ipaddress() + '\t' + str(self.isvalid())
+
+	def isvalid(self):
+		return self.validitycheck.isvalid(self.ipaddress())
+
+class ValidityCheck:
+	md5cache = {}
+	homepagemd5 = 'b3617dec481f482cfdb21519136ebd9a'
+
+	def isvalid(self, ipaddress):
+		return self.gethomepagemd5(ipaddress) == ValidityCheck.homepagemd5
+
+	def gethomepagemd5(self, ipaddress):
+		if ipaddress in ValidityCheck.md5cache:
+			return ValidityCheck.md5cache[ipaddress]
+
+		pagehash = hashlib.md5(self.gethomepage(ipaddress)).hexdigest()
+		ValidityCheck.md5cache[ipaddress] = pagehash
+
+		return pagehash
+
+	def gethomepage(self, ipaddress):
+		try:
+			page = urlopen('http://' + ipaddress + '/', None, 10)
+		except urllib2.URLError:
+			return ''
+
+		content = page.read()
+		page.close()
+
+		return content
+
+hosts = [Host(i) for i in range(2, 6)]
+
+if len(set([h.ipaddress() for h in hosts])) == 1 and all([h.isvalid() for h in hosts]):
+	exit(0)
+
+from email.mime.text import MIMEText
+
+msg = MIMEText('\n'.join([str(h) for h in hosts]))
+msg['From'] = 'no-reply@stephanedewit.be'
+msg['To'] = 'contact@stephanedewit.be'
+msg['Subject'] = 'DynDNS error'
+
+from subprocess import Popen, PIPE
+p = Popen(['/usr/sbin/sendmail', '-t'], stdin=PIPE)
+p.communicate(msg.as_bytes())
