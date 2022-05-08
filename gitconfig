@@ -1,5 +1,6 @@
 [user]
 	name = Stéphane de Wit
+	signingkey = 3682E7F3DEE381C5D064404286F7DFC9FBE78E02
 [alias]
 	st = status -sb
 	di = diff
