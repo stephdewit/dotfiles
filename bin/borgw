@@ -23,7 +23,8 @@ fi
 export BORG_PASSCOMMAND="cat $HOME/.secret/borg"
 
 if [ "$action" = "create" ]; then
-	[ $verbose -eq 1 ] && parameters="-v --progress --stats"
+	[ $verbose -eq 1 ] && parameters="-v --stats"
+	[ $verbose -eq 1 ] && [ -t 1 ] && parameters="$parameters --progress"
 
 	borg create \
 		$parameters \
@@ -51,7 +52,8 @@ elif [ "$action" = "prune" ]; then
 		--keep-monthly -1 \
 		$repo
 elif [ "$action" = "check" ]; then
-	[ $verbose -eq 1 ] && parameters="-v --progress"
+	[ $verbose -eq 1 ] && parameters="-v"
+	[ $verbose -eq 1 ] && [ -t 1 ] && parameters="$parameters --progress"
 
 	borg check $parameters $repo
 elif [ "$action" = "mount" ]; then
