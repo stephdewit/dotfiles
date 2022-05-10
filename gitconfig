@@ -1,5 +1,6 @@
 [user]
 	name = Stéphane de Wit
+	email = contact@stephanedewit.be
 	signingkey = 3682E7F3DEE381C5D064404286F7DFC9FBE78E02
 [alias]
 	st = status -sb
@@ -19,8 +20,6 @@
 	diff = auto
 	interactive = auto
 	status = auto
-[include]
-	path = ~/.secret/gitconfig
 [core]
 	excludesfile = ~/.gitignore
 	pager = delta
