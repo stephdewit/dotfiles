@@ -20,7 +20,7 @@ else
 	verbose=0
 fi
 
-export BORG_PASSCOMMAND="cat $HOME/.secret/borg"
+export BORG_PASSCOMMAND="cat $HOME/.creds/borg"
 
 if [ "$action" = "create" ]; then
 	[ $verbose -eq 1 ] && parameters="-v --stats"
@@ -30,7 +30,7 @@ if [ "$action" = "create" ]; then
 		$parameters \
 		--comment "$(uname -a)" \
 		--compression zstd,7 \
-		--exclude="$HOME"/{'.secret','downloads','media'} \
+		--exclude="$HOME"/{downloads,media} \
 		"$repo::{hostname}-{now}" \
 		"$HOME"
 elif [ "$action" = "list" ]; then
