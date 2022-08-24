@@ -30,6 +30,7 @@ if [ "$action" = "create" ]; then
 		$parameters \
 		--comment "$(uname -a)" \
 		--compression zstd,7 \
+		--exclude="$HOME/.config/borg/security/*/nonce" \
 		--exclude="$HOME"/{downloads,media} \
 		"$repo::{hostname}-{now}" \
 		"$HOME"
