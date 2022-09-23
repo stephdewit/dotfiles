@@ -5,6 +5,7 @@
 [alias]
 	st = status -sb
 	di = diff
+	dt = difftool
 	prb = pull --rebase
 	pwl = push --force-with-lease
 	ci = commit
