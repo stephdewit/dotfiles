@@ -39,13 +39,13 @@ elif [ "$action" = "list" ]; then
 
 	borg list \
 		$parameters \
-		--prefix '{hostname}-' \
+		--glob-archives '{hostname}-*' \
 		$repo
 elif [ "$action" = "prune" ]; then
 	[ $verbose -eq 1 ] && parameters="-v --list"
 
 	borg prune \
-		--prefix '{hostname}-' \
+		--glob-archives '{hostname}-*' \
 		$parameters \
 		--keep-within 2d \
 		--keep-daily 7 \
@@ -62,7 +62,7 @@ elif [ "$action" = "mount" ]; then
 	[ -d "$1" ] || die 'Destination folder does not exist'
 
 	borg mount \
-		--prefix '{hostname}-' \
+		--glob-archives '{hostname}-*' \
 		$repo \
 		"$1"
 elif [ "$action" = "umount" ] || [ "$action" = "unmount" ]; then
