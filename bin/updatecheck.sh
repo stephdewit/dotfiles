@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sudo emerge --sync -q
+sudo emerge --sync -q | grep -Ev '^/var/db/repos/\w+$'
 result=$(emerge -puvND --with-bdeps=y world 2>&1)
 
 count=$(echo "$result" | grep -oP '\d+(?= package)')
