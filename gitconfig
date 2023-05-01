@@ -25,6 +25,8 @@
 [core]
 	excludesfile = ~/.gitignore
 	pager = delta
+[tag]
+	gpgSign = true
 [push]
 	default = simple
 [diff]
