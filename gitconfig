@@ -17,6 +17,7 @@
 	prbr = !git remote prune ${1-origin} && git branch --verbose | awk -F ' ' '/\\[gone\\]/ { print $1 }' | xargs -r git branch --delete
 	head = rev-parse --verify --short HEAD
 	tags = tag --sort=-version:refname -n
+	lt = describe --tags --abbrev=0
 [color]
 	branch = auto
 	diff = auto
