@@ -31,8 +31,8 @@ CASE_SENSITIVE="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 [ "$(uname)" = "Darwin" ] \
-	&& plugins=(git sudo macos brew node npm yarn tmux golang vagrant) \
-	|| plugins=(git sudo tmux docker docker-compose terraform)
+	&& plugins=(git sudo gpg-agent macos brew node npm yarn tmux golang vagrant) \
+	|| plugins=(git sudo gpg-agent tmux docker docker-compose terraform)
 
 # Load zplug
 if [ -d $HOME/.zplug ]; then
