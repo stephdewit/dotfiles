@@ -18,6 +18,7 @@
 	head = rev-parse --verify --short HEAD
 	tags = tag --sort=-version:refname -n
 	lt = describe --tags --abbrev=0
+	arch = "!git archive -o ../${PWD##*/}.tgz HEAD"
 [color]
 	branch = auto
 	diff = auto
