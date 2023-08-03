@@ -21,10 +21,10 @@ crossword() { /bin/grep -i --color=never ^$(echo "$1" | sed 's/_/\\w/g')$ /usr/s
 checkdyndns() {
 	echo ' ' $(extip 2>/dev/null)
 	echo "=="
-	echo ' ' $(dig home.sdw.host +short | tail -n 1) $(dig home.sdw.host CNAME +short)
+	echo ' ' $(dig home.sdw.ovh +short | tail -n 1) $(dig home.sdw.ovh CNAME +short)
 	echo "=="
 	for i in {2..6}; do
-		echo $i $(dig $i.home.sdw.host +short | tail -n 1) $(dig $i.home.sdw.host CNAME +short)
+		echo $i $(dig $i.home.sdw.ovh +short | tail -n 1) $(dig $i.home.sdw.ovh CNAME +short)
 	done
 }
 
