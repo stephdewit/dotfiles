@@ -40,7 +40,9 @@ for f in *.*; do
 		continue
 	fi
 
-	if [ $width -eq 3840 -o $height -eq 2160 ]; then
+	if [ $width -lt $height ]; then
+		folder="Vertical"
+	elif [ $width -eq 3840 -o $height -eq 2160 ]; then
 		folder="4K"
 	elif [ $width -eq 1920 -o $height -eq 1080 ]; then
 		folder="1080p"
