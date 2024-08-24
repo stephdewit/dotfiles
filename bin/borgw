@@ -41,6 +41,12 @@ elif [ "$action" = "list" ]; then
 		$parameters \
 		--glob-archives '{hostname}-*' \
 		$repo
+elif [ "$action" = "info" ]; then
+	[ "$1" = "" ] && die 'Missing archive parameter'
+
+	borg info \
+		--glob-archives '{hostname}-*' \
+		"$repo::$1"
 elif [ "$action" = "prune" ]; then
 	[ $verbose -eq 1 ] && parameters="-v --list"
 
