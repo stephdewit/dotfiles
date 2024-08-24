@@ -47,6 +47,12 @@ elif [ "$action" = "info" ]; then
 	borg info \
 		--glob-archives '{hostname}-*' \
 		"$repo::$1"
+elif [ "$action" = "delete" ]; then
+	[ "$1" = "" ] && die 'Missing archive parameter'
+
+	borg delete \
+		--save-space --stats \
+		"$repo::$1"
 elif [ "$action" = "prune" ]; then
 	[ $verbose -eq 1 ] && parameters="-v --list"
 
