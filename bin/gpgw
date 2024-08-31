@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+set -e
+
+die() {
+	echo "$@" 1>&2
+	exit 1
+}
+
+encrypt=0
+decrypt=0
+recipient=contact@stephanedewit.be
+sign=1
+
+while getopts ":edr:sS" opt; do
+	case $opt in
+		e ) encrypt=1;;
+		d ) decrypt=1;;
+		r ) recipient=$OPTARG;;
+		S ) sign=0;;
+		s ) sign=1;;
+		: ) die "-$OPTARG requires an argument";;
+		\?) die "Invalid option: -$OPTARG";;
+	esac
+done
+
+[ $encrypt -eq 0 ] && [ $decrypt -eq 0 ] && die "Missing -e or -d"
+[ $encrypt -eq 1 ] && [ $decrypt -eq 1 ] && die "-e and -d are both set"
+
+shift $((OPTIND - 1))
+
+for file in "$@"; do
+	[ -e "$file" ] || die "$file missing"
+
+	if [ $encrypt -eq 1 ]; then
+		[ "${file: -4}" == ".gpg" ] && die "$file is already encrypted"
+
+		out=${file}.gpg
+		[ -e "$out" ] && die "$out already exists"
+
+		parameters=(--encrypt --recipient "$recipient")
+		[ $sign -eq 1 ] && parameters=("${parameters[@]}" --sign)
+	elif [ $decrypt -eq 1 ]; then
+		[ "${file: -4}" == ".gpg" ] || die "$file is not encrypted"
+
+		out="${file%.*}"
+		[ -e "$out" ] && die "$out already exists"
+
+		parameters=(--decrypt)
+	else
+		die "Unknown operation"
+	fi
+
+	gpg "${parameters[@]}" --output "$out" "$file"
+	touch -r "$file" "$out"
+done
