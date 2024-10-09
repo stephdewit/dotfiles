@@ -36,7 +36,6 @@ for file in "$@"; do
 		[ "${file: -4}" == ".gpg" ] && die "$file is already encrypted"
 
 		out=${file}.gpg
-		[ -e "$out" ] && die "$out already exists"
 
 		parameters=(--encrypt --recipient "$recipient")
 		[ $sign -eq 1 ] && parameters=("${parameters[@]}" --sign)
@@ -44,12 +43,13 @@ for file in "$@"; do
 		[ "${file: -4}" == ".gpg" ] || die "$file is not encrypted"
 
 		out="${file%.*}"
-		[ -e "$out" ] && die "$out already exists"
 
 		parameters=(--decrypt)
 	else
 		die "Unknown operation"
 	fi
+
+	[ -e "$out" ] && die "$out already exists"
 
 	gpg "${parameters[@]}" --output "$out" "$file"
 	touch -r "$file" "$out"
