@@ -40,7 +40,7 @@ elif [ "$action" = "list" ]; then
 	borg list \
 		"${parameters[@]}" \
 		--glob-archives '{hostname}-*' \
-		$repo
+		"$repo"
 elif [ "$action" = "info" ]; then
 	[ "$1" = "" ] && die 'Missing archive parameter'
 
@@ -63,19 +63,19 @@ elif [ "$action" = "prune" ]; then
 		--keep-daily 7 \
 		--keep-weekly 4 \
 		--keep-monthly -1 \
-		$repo
+		"$repo"
 elif [ "$action" = "check" ]; then
 	[ $verbose -eq 1 ] && parameters=(-v)
 	[ $verbose -eq 1 ] && [ -t 1 ] && parameters=("${parameters[@]}" --progress)
 
-	borg check "${parameters[@]}" $repo
+	borg check "${parameters[@]}" "$repo"
 elif [ "$action" = "mount" ]; then
 	[ "$1" = "" ] && die 'Missing destination folder'
 	[ -d "$1" ] || die 'Destination folder does not exist'
 
 	borg mount \
 		--glob-archives '{hostname}-*' \
-		$repo \
+		"$repo" \
 		"$1"
 elif [ "$action" = "umount" ] || [ "$action" = "unmount" ]; then
 	[ "$1" = "" ] && die 'Missing destination folder'
