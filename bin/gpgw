@@ -11,14 +11,17 @@ encrypt=0
 decrypt=0
 recipient=contact@stephanedewit.be
 sign=1
+keep=1
 
-while getopts ":edr:sS" opt; do
+while getopts ":edr:sSkK" opt; do
 	case $opt in
 		e ) encrypt=1;;
 		d ) decrypt=1;;
 		r ) recipient=$OPTARG;;
 		S ) sign=0;;
 		s ) sign=1;;
+		K ) keep=0;;
+		k ) keep=1;;
 		: ) die "-$OPTARG requires an argument";;
 		\?) die "Invalid option: -$OPTARG";;
 	esac
@@ -56,4 +59,8 @@ for file in "$@"; do
 	chown --reference "$file" "$out"
 	chmod --reference "$file" "$out"
 	touch -r "$file" "$out"
+
+	if [ $keep -eq 0 ]; then
+		rm "$file"
+	fi
 done
