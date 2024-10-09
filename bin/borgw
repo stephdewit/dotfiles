@@ -13,12 +13,16 @@ die() {
 action="$1"
 shift
 
-if [ "$1" = "-v" ]; then
-	verbose=1
-	shift
-else
-	verbose=0
-fi
+verbose=0
+
+while getopts ":v" opt; do
+	case $opt in
+		v ) verbose=1;;
+		\?) die "Invalid option: -$OPTARG";;
+	esac
+done
+
+shift $((OPTIND - 1))
 
 export BORG_PASSCOMMAND="cat $HOME/.creds/borg"
 
