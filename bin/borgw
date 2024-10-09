@@ -23,11 +23,11 @@ fi
 export BORG_PASSCOMMAND="cat $HOME/.creds/borg"
 
 if [ "$action" = "create" ]; then
-	[ $verbose -eq 1 ] && parameters="-v --stats"
-	[ $verbose -eq 1 ] && [ -t 1 ] && parameters="$parameters --progress"
+	[ $verbose -eq 1 ] && parameters=(-v --stats)
+	[ $verbose -eq 1 ] && [ -t 1 ] && parameters=("${parameters[@]}" --progress)
 
 	borg create \
-		$parameters \
+		"${parameters[@]}" \
 		--comment "$(uname -a)" \
 		--compression zstd,7 \
 		--exclude="$HOME/.config/borg/security/*/nonce" \
@@ -35,10 +35,10 @@ if [ "$action" = "create" ]; then
 		"$repo::{hostname}-{now}" \
 		"$HOME"
 elif [ "$action" = "list" ]; then
-	[ $verbose -eq 0 ] && parameters="--short"
+	[ $verbose -eq 0 ] && parameters=(--short)
 
 	borg list \
-		$parameters \
+		"${parameters[@]}" \
 		--glob-archives '{hostname}-*' \
 		$repo
 elif [ "$action" = "info" ]; then
@@ -54,21 +54,21 @@ elif [ "$action" = "delete" ]; then
 		--save-space --stats \
 		"$repo::$1"
 elif [ "$action" = "prune" ]; then
-	[ $verbose -eq 1 ] && parameters="-v --list"
+	[ $verbose -eq 1 ] && parameters=(-v --list)
 
 	borg prune \
 		--glob-archives '{hostname}-*' \
-		$parameters \
+		"${parameters[@]}" \
 		--keep-within 2d \
 		--keep-daily 7 \
 		--keep-weekly 4 \
 		--keep-monthly -1 \
 		$repo
 elif [ "$action" = "check" ]; then
-	[ $verbose -eq 1 ] && parameters="-v"
-	[ $verbose -eq 1 ] && [ -t 1 ] && parameters="$parameters --progress"
+	[ $verbose -eq 1 ] && parameters=(-v)
+	[ $verbose -eq 1 ] && [ -t 1 ] && parameters=("${parameters[@]}" --progress)
 
-	borg check $parameters $repo
+	borg check "${parameters[@]}" $repo
 elif [ "$action" = "mount" ]; then
 	[ "$1" = "" ] && die 'Missing destination folder'
 	[ -d "$1" ] || die 'Destination folder does not exist'
