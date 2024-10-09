@@ -2,7 +2,10 @@
 
 set -e
 
-repo=stan-borg:/volume1/backups/borg/
+declare -A repos
+
+repos[stan]=stan-borg:/volume1/backups/borg/
+repos[borgbase]=borgbase:/./repo
 
 die() {
 	echo "$@" 1>&2
@@ -14,17 +17,21 @@ action="$1"
 shift
 
 verbose=0
+target=stan
 
-while getopts ":v" opt; do
+while getopts ":vt:" opt; do
 	case $opt in
 		v ) verbose=1;;
+		t ) target=$OPTARG;;
+		: ) die "-$OPTARG requires an argument";;
 		\?) die "Invalid option: -$OPTARG";;
 	esac
 done
 
 shift $((OPTIND - 1))
 
-export BORG_PASSCOMMAND="cat $HOME/.creds/borg"
+repo="${repos[$target]}"
+export BORG_PASSCOMMAND="cat $HOME/.creds/borg@$target"
 
 if [ "$action" = "create" ]; then
 	[ $verbose -eq 1 ] && parameters=(-v --stats)
