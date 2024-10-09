@@ -52,5 +52,8 @@ for file in "$@"; do
 	[ -e "$out" ] && die "$out already exists"
 
 	gpg "${parameters[@]}" --output "$out" "$file"
+
+	chown --reference "$file" "$out"
+	chmod --reference "$file" "$out"
 	touch -r "$file" "$out"
 done
