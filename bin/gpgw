@@ -27,10 +27,10 @@ while getopts ":edr:sSkK" opt; do
 	esac
 done
 
+shift $((OPTIND - 1))
+
 [ $encrypt -eq 0 ] && [ $decrypt -eq 0 ] && die "Missing -e or -d"
 [ $encrypt -eq 1 ] && [ $decrypt -eq 1 ] && die "-e and -d are both set"
-
-shift $((OPTIND - 1))
 
 for file in "$@"; do
 	[ -e "$file" ] || die "$file missing"
