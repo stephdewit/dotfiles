@@ -10,7 +10,7 @@ die() {
 encrypt=0
 decrypt=0
 recipient=contact@stephanedewit.be
-sign=1
+sign=-1
 keep=1
 
 while getopts ":edr:sSkK" opt; do
@@ -29,8 +29,13 @@ done
 
 shift $((OPTIND - 1))
 
-[ $encrypt -eq 0 ] && [ $decrypt -eq 0 ] && die "Missing -e or -d"
+[ $encrypt -ne 1 ] && \
+[ $decrypt -ne 1 ] && \
+[ $sign -ne 1 ] && \
+	die "Missing -e, -d or -s"
+
 [ $encrypt -eq 1 ] && [ $decrypt -eq 1 ] && die "-e and -d are both set"
+[ $decrypt -eq 1 ] && [ $sign -eq 1 ] && die "-d and -s are both set"
 
 for file in "$@"; do
 	[ -e "$file" ] || die "$file missing"
@@ -41,13 +46,17 @@ for file in "$@"; do
 		out=${file}.gpg
 
 		parameters=(--encrypt --recipient "$recipient")
-		[ $sign -eq 1 ] && parameters=("${parameters[@]}" --sign)
+		[ $sign -ne 0 ] && parameters=("${parameters[@]}" --sign)
 	elif [ $decrypt -eq 1 ]; then
 		[ "${file: -4}" == ".gpg" ] || die "$file is not encrypted"
 
 		out="${file%.*}"
 
 		parameters=(--decrypt)
+	elif [ $sign -eq 1 ]; then
+		out=${file}.asc
+
+		parameters=(--detach-sig --armor)
 	else
 		die "Unknown operation"
 	fi
@@ -55,6 +64,10 @@ for file in "$@"; do
 	[ -e "$out" ] && die "$out already exists"
 
 	gpg "${parameters[@]}" --output "$out" "$file"
+
+	if [ $encrypt -ne 1 ] && [ $decrypt -ne 1 ]; then
+		continue
+	fi
 
 	chown --reference "$file" "$out"
 	chmod --reference "$file" "$out"
