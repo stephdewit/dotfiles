@@ -11,15 +11,17 @@ encrypt=0
 decrypt=0
 recipient=contact@stephanedewit.be
 sign=-1
+verify=0
 keep=1
 
-while getopts ":edr:sSkK" opt; do
+while getopts ":edr:sSvkK" opt; do
 	case $opt in
 		e ) encrypt=1;;
 		d ) decrypt=1;;
 		r ) recipient=$OPTARG;;
 		S ) sign=0;;
 		s ) sign=1;;
+		v ) verify=1;;
 		K ) keep=0;;
 		k ) keep=1;;
 		: ) die "-$OPTARG requires an argument";;
@@ -32,10 +34,18 @@ shift $((OPTIND - 1))
 [ $encrypt -ne 1 ] && \
 [ $decrypt -ne 1 ] && \
 [ $sign -ne 1 ] && \
-	die "Missing -e, -d or -s"
+[ $verify -ne 1 ] && \
+	die "Missing -e, -d, -s or -v"
 
 [ $encrypt -eq 1 ] && [ $decrypt -eq 1 ] && die "-e and -d are both set"
 [ $decrypt -eq 1 ] && [ $sign -eq 1 ] && die "-d and -s are both set"
+
+[ $verify -eq 1 ] && { \
+	[ $encrypt -eq 1 ] || \
+	[ $decrypt -eq 1 ] || \
+	[ $sign -eq 1 ]; \
+} && \
+	die "-v and another action are both set"
 
 for file in "$@"; do
 	[ -e "$file" ] || die "$file missing"
@@ -57,13 +67,31 @@ for file in "$@"; do
 		out=${file}.asc
 
 		parameters=(--detach-sig --armor)
+	elif [ $verify -eq 1 ]; then
+		if [ "${file: -4}" == ".asc" ]; then
+			sig=${file}
+			file=${file%.*}
+
+			computed_path=$file
+		else
+			sig=${file}.asc
+
+			computed_path=$sig
+		fi
+
+		[ -e "$computed_path" ] || die "$computed_path missing"
+
+		parameters=(--verify "$sig")
 	else
 		die "Unknown operation"
 	fi
 
-	[ -e "$out" ] && die "$out already exists"
+	if [ "$out" != "" ]; then
+		[ -e "$out" ] && die "$out already exists"
+		parameters=("${parameters[@]}" --output "$out")
+	fi
 
-	gpg "${parameters[@]}" --output "$out" "$file"
+	gpg "${parameters[@]}" "$file"
 
 	if [ $encrypt -ne 1 ] && [ $decrypt -ne 1 ]; then
 		continue
