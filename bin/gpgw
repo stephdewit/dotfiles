@@ -60,7 +60,7 @@ for file in "$@"; do
 	elif [ $decrypt -eq 1 ]; then
 		[ "${file: -4}" == ".gpg" ] || die "$file is not encrypted"
 
-		out="${file%.*}"
+		out=${file%.*}
 
 		parameters=(--decrypt)
 	elif [ $sign -eq 1 ]; then
