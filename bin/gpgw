@@ -36,21 +36,14 @@ done
 
 shift $((OPTIND - 1))
 
-[ $encrypt -ne 1 ] && \
-[ $decrypt -ne 1 ] && \
-[ $sign -ne 1 ] && \
-[ $verify -ne 1 ] && \
-	die "Missing -e, -d, -s or -v"
+actions_count=$(( encrypt + decrypt + verify ))
 
-[ $encrypt -eq 1 ] && [ $decrypt -eq 1 ] && die "-e and -d are both set"
-[ $decrypt -eq 1 ] && [ $sign -eq 1 ] && die "-d and -s are both set"
+if [ $encrypt -ne 1 ] && [ $sign -eq 1 ]; then
+	actions_count=$(( actions_count + 1 ))
+fi
 
-[ $verify -eq 1 ] && { \
-	[ $encrypt -eq 1 ] || \
-	[ $decrypt -eq 1 ] || \
-	[ $sign -eq 1 ]; \
-} && \
-	die "-v and another action are both set"
+[ $actions_count -lt 1 ] && die "Missing -e, -d, -s or -v"
+[ $actions_count -gt 1 ] && die "Multiple actions specified"
 
 for file in "$@"; do
 	[ -e "$file" ] || die "$file missing"
