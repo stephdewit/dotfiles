@@ -9,6 +9,17 @@ die() {
 
 default_key=contact@stephanedewit.be
 
+primary_key_sdw=A693C41B530AC742094DD3B9D65BBB43F04DD008
+sub_keys_sdw=(
+	3682E7F3DEE381C5D064404286F7DFC9FBE78E02
+	C91F43A3BFD811EFB4EEB81CC1E2CE78B3B38CCC
+)
+primary_key_28s=DBE2625E3670BACBCA7778D975A59D54E6D3FE6A
+sub_keys_28s=(
+	D3DDA2B4190D50E04C1C451E3B7DB492867DE2DD
+	89EF3C41E7557AA72299CCF42247BB588F41A764
+)
+
 encrypt=0
 decrypt=0
 sign=-1
@@ -18,7 +29,10 @@ recipient=$default_key
 sign_key=$default_key
 keep=1
 
-while getopts ":edsSvr:u:kK" opt; do
+set_expire_subs=0
+set_expire_primary=0
+
+while getopts ":edsSvr:u:kKxX" opt; do
 	case $opt in
 		e ) encrypt=1;;
 		d ) decrypt=1;;
@@ -29,6 +43,8 @@ while getopts ":edsSvr:u:kK" opt; do
 		u ) sign_key=$OPTARG;;
 		k ) keep=1;;
 		K ) keep=0;;
+		x ) set_expire_subs=1;;
+		X ) set_expire_primary=1;;
 		: ) die "-$OPTARG requires an argument";;
 		\?) die "Invalid option: -$OPTARG";;
 	esac
@@ -36,14 +52,52 @@ done
 
 shift $((OPTIND - 1))
 
-actions_count=$(( encrypt + decrypt + verify ))
+actions_count=$((
+	encrypt +
+	decrypt +
+	verify +
+	set_expire_subs +
+	set_expire_primary
+))
 
 if [ $encrypt -ne 1 ] && [ $sign -eq 1 ]; then
 	actions_count=$(( actions_count + 1 ))
 fi
 
-[ $actions_count -lt 1 ] && die "Missing -e, -d, -s or -v"
+[ $actions_count -lt 1 ] && die "Missing -e, -d, -s, -v, -x or -X"
 [ $actions_count -gt 1 ] && die "Multiple actions specified"
+
+if [ $((set_expire_subs + set_expire_primary)) -ge 1 ]; then
+	set_expire() {
+		primary=$1
+		shift
+
+		gpg --import "$HOME/pki/gnupg/$primary/secret_key.asc"
+
+		if [ $set_expire_subs -eq 1 ]; then
+			gpg --quick-set-expire "$primary" 6m "$@"
+		fi
+
+		if [ $set_expire_primary -eq 1 ]; then
+			gpg --quick-set-expire "$primary" 2y
+		fi
+
+		gpg --export-secret-keys --armor "$primary" > \
+			"$HOME/pki/gnupg/$primary/secret_key.asc"
+
+		gpg --export-secret-subkeys --armor "$primary" > \
+			"$HOME/pki/gnupg/$primary/secret_subkeys.asc"
+
+		gpg --delete-secret-keys "$primary"
+		gpg --import "$HOME/pki/gnupg/$primary/secret_subkeys.asc"
+		rm "$HOME/pki/gnupg/$primary/secret_subkeys.asc"
+	}
+
+	set_expire $primary_key_sdw "${sub_keys_sdw[@]}"
+	set_expire $primary_key_28s "${sub_keys_28s[@]}"
+
+	exit 0
+fi
 
 for file in "$@"; do
 	[ -e "$file" ] || die "$file missing"
