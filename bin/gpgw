@@ -7,16 +7,18 @@ die() {
 	exit 1
 }
 
+default_key=contact@stephanedewit.be
+
 encrypt=0
 decrypt=0
 sign=-1
 verify=0
 
-recipient=contact@stephanedewit.be
-
+recipient=$default_key
+sign_key=$default_key
 keep=1
 
-while getopts ":edsSvr:kK" opt; do
+while getopts ":edsSvr:u:kK" opt; do
 	case $opt in
 		e ) encrypt=1;;
 		d ) decrypt=1;;
@@ -24,6 +26,7 @@ while getopts ":edsSvr:kK" opt; do
 		S ) sign=0;;
 		v ) verify=1;;
 		r ) recipient=$OPTARG;;
+		u ) sign_key=$OPTARG;;
 		k ) keep=1;;
 		K ) keep=0;;
 		: ) die "-$OPTARG requires an argument";;
@@ -60,7 +63,7 @@ for file in "$@"; do
 		parameters=(--encrypt --recipient "$recipient")
 
 		if [ $sign -ne 0 ]; then
-			parameters=("${parameters[@]}" --sign)
+			parameters=("${parameters[@]}" --sign --local-user "$sign_key")
 		fi
 	elif [ $decrypt -eq 1 ]; then
 		[ "${file: -4}" == ".gpg" ] || die "$file is not encrypted"
@@ -71,7 +74,7 @@ for file in "$@"; do
 	elif [ $sign -eq 1 ]; then
 		out=${file}.asc
 
-		parameters=(--detach-sig --armor)
+		parameters=(--detach-sig --armor --local-user "$sign_key")
 	elif [ $verify -eq 1 ]; then
 		if [ "${file: -4}" == ".asc" ]; then
 			sig=${file}
