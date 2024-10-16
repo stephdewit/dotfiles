@@ -9,21 +9,23 @@ die() {
 
 encrypt=0
 decrypt=0
-recipient=contact@stephanedewit.be
 sign=-1
 verify=0
+
+recipient=contact@stephanedewit.be
+
 keep=1
 
-while getopts ":edr:sSvkK" opt; do
+while getopts ":edsSvr:kK" opt; do
 	case $opt in
 		e ) encrypt=1;;
 		d ) decrypt=1;;
-		r ) recipient=$OPTARG;;
-		S ) sign=0;;
 		s ) sign=1;;
+		S ) sign=0;;
 		v ) verify=1;;
-		K ) keep=0;;
+		r ) recipient=$OPTARG;;
 		k ) keep=1;;
+		K ) keep=0;;
 		: ) die "-$OPTARG requires an argument";;
 		\?) die "Invalid option: -$OPTARG";;
 	esac
