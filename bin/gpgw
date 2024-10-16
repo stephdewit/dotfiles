@@ -58,7 +58,10 @@ for file in "$@"; do
 		out=${file}.gpg
 
 		parameters=(--encrypt --recipient "$recipient")
-		[ $sign -ne 0 ] && parameters=("${parameters[@]}" --sign)
+
+		if [ $sign -ne 0 ]; then
+			parameters=("${parameters[@]}" --sign)
+		fi
 	elif [ $decrypt -eq 1 ]; then
 		[ "${file: -4}" == ".gpg" ] || die "$file is not encrypted"
 
