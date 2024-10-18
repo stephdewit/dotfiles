@@ -64,6 +64,10 @@ if [ $encrypt -ne 1 ] && [ $sign -eq 1 ]; then
 	actions_count=$(( actions_count + 1 ))
 fi
 
+if [ $set_expire_subs -eq 1 ] && [ $set_expire_primary -eq 1 ]; then
+	actions_count=$(( actions_count - 1 ))
+fi
+
 [ $actions_count -lt 1 ] && die "Missing -e, -d, -s, -v, -x or -X"
 [ $actions_count -gt 1 ] && die "Multiple actions specified"
 
@@ -74,12 +78,12 @@ if [ $((set_expire_subs + set_expire_primary)) -ge 1 ]; then
 
 		gpg --import "$HOME/pki/gnupg/$primary/secret_key.asc"
 
-		if [ $set_expire_subs -eq 1 ]; then
-			gpg --quick-set-expire "$primary" 6m "$@"
-		fi
-
 		if [ $set_expire_primary -eq 1 ]; then
 			gpg --quick-set-expire "$primary" 2y
+		fi
+
+		if [ $set_expire_subs -eq 1 ]; then
+			gpg --quick-set-expire "$primary" 6m "$@"
 		fi
 
 		gpg --export-secret-keys --armor "$primary" > \
