@@ -103,6 +103,16 @@ if [ $((set_expire_subs + set_expire_primary)) -ge 1 ]; then
 	exit 0
 fi
 
+if [ "$(uname -s)" == Darwin ]; then
+	chown_r=(gchown --reference)
+	chmod_r=(gchmod --reference)
+	touch_r=(touch -r)
+else
+	chmod_r=(chmod --reference)
+	chown_r=(chown --reference)
+	touch_r=(touch -r)
+fi
+
 for file in "$@"; do
 	[ -e "$file" ] || die "$file missing"
 
@@ -156,9 +166,9 @@ for file in "$@"; do
 		continue
 	fi
 
-	chown --reference "$file" "$out"
-	chmod --reference "$file" "$out"
-	touch -r "$file" "$out"
+	"${chown_r[@]}" "$file" "$out"
+	"${chmod_r[@]}" "$file" "$out"
+	"${touch_r[@]}" "$file" "$out"
 
 	if [ $keep -eq 0 ]; then
 		rm "$file"
