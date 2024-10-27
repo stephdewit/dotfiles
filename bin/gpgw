@@ -9,6 +9,12 @@ die() {
 
 default_key=contact@stephanedewit.be
 
+user_ids=(
+	"$default_key"
+	stephane@twentyeight.solutions
+	info@twentyeight.solutions
+)
+
 primary_key_sdw=A693C41B530AC742094DD3B9D65BBB43F04DD008
 sub_keys_sdw=(
 	3682E7F3DEE381C5D064404286F7DFC9FBE78E02
@@ -31,8 +37,9 @@ keep=1
 
 set_expire_subs=0
 set_expire_primary=0
+publish=0
 
-while getopts ":edsSvr:u:kKxX" opt; do
+while getopts ":edsSvr:u:kKxXp" opt; do
 	case $opt in
 		e ) encrypt=1;;
 		d ) decrypt=1;;
@@ -45,6 +52,7 @@ while getopts ":edsSvr:u:kKxX" opt; do
 		K ) keep=0;;
 		x ) set_expire_subs=1;;
 		X ) set_expire_primary=1;;
+		p ) publish=1;;
 		: ) die "-$OPTARG requires an argument";;
 		\?) die "Invalid option: -$OPTARG";;
 	esac
@@ -57,7 +65,8 @@ actions_count=$((
 	decrypt +
 	verify +
 	set_expire_subs +
-	set_expire_primary
+	set_expire_primary +
+	publish
 ))
 
 if [ $encrypt -ne 1 ] && [ $sign -eq 1 ]; then
@@ -68,7 +77,7 @@ if [ $set_expire_subs -eq 1 ] && [ $set_expire_primary -eq 1 ]; then
 	actions_count=$(( actions_count - 1 ))
 fi
 
-[ $actions_count -lt 1 ] && die "Missing -e, -d, -s, -v, -x or -X"
+[ $actions_count -lt 1 ] && die "Missing -e, -d, -s, -v, -x, -X or -p"
 [ $actions_count -gt 1 ] && die "Multiple actions specified"
 
 if [ $((set_expire_subs + set_expire_primary)) -ge 1 ]; then
@@ -99,6 +108,31 @@ if [ $((set_expire_subs + set_expire_primary)) -ge 1 ]; then
 
 	set_expire $primary_key_sdw "${sub_keys_sdw[@]}"
 	set_expire $primary_key_28s "${sub_keys_28s[@]}"
+
+	exit 0
+fi
+
+if [ $publish -eq 1 ]; then
+	wkd_publish() {
+		domain=$(echo "$1" | cut -f 2 -d @)
+		hash=$(gpg-wks-client print-wkd-hash "$1" | cut -f 1 -d ' ')
+
+		prefix="s3://sdw-pki/gpg/wkd"
+
+		gpg --export "$1" | \
+			aws s3 cp \
+				--profile sdwbe \
+				--content-type 'application/octet-stream' \
+				--metadata "email-address=$1" \
+				- \
+				"$prefix/.well-known/openpgpkey/$domain/hu/$hash"
+
+		echo "$1 published to WKD"
+	}
+
+	for user_id in "${user_ids[@]}"; do
+		wkd_publish "$user_id"
+	done
 
 	exit 0
 fi
