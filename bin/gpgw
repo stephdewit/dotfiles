@@ -80,7 +80,7 @@ fi
 [ $actions_count -lt 1 ] && die "Missing -e, -d, -s, -v, -x, -X or -p"
 [ $actions_count -gt 1 ] && die "Multiple actions specified"
 
-if [ $((set_expire_subs + set_expire_primary)) -ge 1 ]; then
+if [ $set_expire_subs -eq 1 ] || [ $set_expire_primary -eq 1 ]; then
 	set_expire() {
 		primary=$1
 		shift
