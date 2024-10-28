@@ -119,7 +119,7 @@ if [ $publish -eq 1 ]; then
 
 		prefix="s3://sdw-pki/gpg/wkd"
 
-		gpg --export "$1" | \
+		gpg --export --export-filter keep-uid="mbox = $1" "$1" | \
 			aws s3 cp \
 				--profile sdwbe \
 				--content-type 'application/octet-stream' \
