@@ -26,6 +26,16 @@ sub_keys_28s=(
 	89EF3C41E7557AA72299CCF42247BB588F41A764
 )
 
+primary_keys=(
+	"$primary_key_sdw"
+	"$primary_key_28s"
+)
+
+hkp_servers=(
+	keys.openpgp.org
+	keyserver.ubuntu.com
+)
+
 encrypt=0
 decrypt=0
 sign=-1
@@ -130,8 +140,18 @@ if [ $publish -eq 1 ]; then
 		echo "$1 published to WKD"
 	}
 
+	hkp_publish() {
+		for server in "${hkp_servers[@]}"; do
+			gpg --keyserver "hkps://$server" --send-key "$1"
+		done
+	}
+
 	for user_id in "${user_ids[@]}"; do
 		wkd_publish "$user_id"
+	done
+
+	for primary_key in "${primary_keys[@]}"; do
+		hkp_publish "$primary_key"
 	done
 
 	exit 0
