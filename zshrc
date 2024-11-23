@@ -53,6 +53,8 @@ zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
+export ZSH_COMPDUMP=$ZSH/cache/zcompdump-${HOST}-${ZSH_VERSION}
+
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
