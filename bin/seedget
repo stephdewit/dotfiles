@@ -15,14 +15,14 @@ while getopts ":l:LpcdNvq" opt; do
 		c ) checksum=c;;
 		d ) path=downloads;;
 		N ) nagle_enabled=0;;
-		v ) verbosity=$(($verbosity + 1));;
-		q ) verbosity=$(($verbosity - 1));;
+		v ) verbosity=$((verbosity + 1));;
+		q ) verbosity=$((verbosity - 1));;
 		: ) echo "-$OPTARG requires an argument" >&2; exit 1;;
 		\?) echo "Invalid option: -$OPTARG" >&2; exit 1;;
 	esac
 done
 
-shift $(($OPTIND - 1))
+shift $((OPTIND - 1))
 
 [ $verbosity -ge 1 ] && nc_opt=" -v"
 [ $verbosity -ge 3 ] && nc_opt=${nc_opt}v
