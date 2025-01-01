@@ -2,15 +2,15 @@
 
 set -e
 
-limit=--bwlimit=292K
+limit=(--bwlimit=292K)
 path=data
 nagle_enabled=1
 verbosity=0
 
 while getopts ":l:LpcdNvq" opt; do
 	case $opt in
-		l ) limit=--bwlimit=$OPTARG;;
-		L ) limit=;;
+		l ) limit=("--bwlimit=$OPTARG");;
+		L ) limit=();;
 		p ) pretend=n;;
 		c ) checksum=c;;
 		d ) path=downloads;;
@@ -33,27 +33,30 @@ shift $((OPTIND - 1))
 [ $verbosity -ge 2 ] && ssh_opt=${ssh_opt}v
 [ $verbosity -ge 3 ] && ssh_opt=${ssh_opt}v
 
-rsh="-e \"ssh$ssh_opt$nagle\""
+rsh=(-e "ssh$ssh_opt$nagle")
 
-rsync_opt="--partial -rth$pretend$checksum"
+rsync_opt=-rth$pretend$checksum
 
 [ $verbosity -le -2 ] && rsync_opt=${rsync_opt}q
 [ $verbosity -ge 0 ] && rsync_opt=${rsync_opt}v
-[ $verbosity -ge 0 ] && [ $verbosity -lt 2 ] && rsync_opt="--progress $rsync_opt"
 [ $verbosity -ge 1 ] && rsync_opt=${rsync_opt}vi
 [ $verbosity -ge 3 ] && rsync_opt=${rsync_opt}v
 
-command="rsync $rsync_opt $rsh $limit --timeout=20"
+rsync_opt=(--partial "$rsync_opt")
+
+[ $verbosity -ge 0 ] && [ $verbosity -lt 2 ] && rsync_opt=(--progress "${rsync_opt[@]}")
+
+command=(rsync "${rsync_opt[@]}" "${rsh[@]}" "${limit[@]}" --timeout=20)
 
 for pattern in "$@"; do
-	command="$command 'jimbo:torrent/$path/$pattern'"
+	command=("${command[@]}" "jimbo:torrent/$path/$pattern")
 done
 
-command="$command ."
+command=("${command[@]}" .)
 
-[ $verbosity -ge 1 ] && echo $command
+[ $verbosity -ge 1 ] && echo "${command[@]}"
 
-until eval $command; do
+until "${command[@]}"; do
 	[ $? -ne 20 ] || exit 1
 	sleep 120
 done
