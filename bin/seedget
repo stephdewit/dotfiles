@@ -39,7 +39,7 @@ rsync_opt="--partial -rth$pretend$checksum"
 
 [ $verbosity -le -2 ] && rsync_opt=${rsync_opt}q
 [ $verbosity -ge 0 ] && rsync_opt=${rsync_opt}v
-[ $verbosity -ge 0 -a $verbosity -lt 2 ] && rsync_opt="--progress $rsync_opt"
+[ $verbosity -ge 0 ] && [ $verbosity -lt 2 ] && rsync_opt="--progress $rsync_opt"
 [ $verbosity -ge 1 ] && rsync_opt=${rsync_opt}vi
 [ $verbosity -ge 3 ] && rsync_opt=${rsync_opt}v
 
