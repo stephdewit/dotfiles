@@ -48,9 +48,26 @@ rsync_opt=(--partial "$rsync_opt")
 
 command=(rsync "${rsync_opt[@]}" "${rsh[@]}" "${limit[@]}" --timeout=20)
 
-for pattern in "$@"; do
-	command=("${command[@]}" "jimbo:torrent/$path/$pattern")
-done
+if [ -z "$1" ]; then
+	temp_file=$(mktemp)
+	trap 'rm -f $temp_file' EXIT
+
+	# shellcheck disable=SC2029
+	ssh jimbo "
+		find torrent/$path \
+		-mmin -720 \
+		-type f \
+		-exec realpath --relative-to=torrent/$path {} \;
+	" > "$temp_file"
+
+	[ $verbosity -ge 1 ] && cat "$temp_file"
+
+	command=("${command[@]}" "--files-from=$temp_file" "jimbo:torrent/$path")
+else
+	for pattern in "$@"; do
+		command=("${command[@]}" "jimbo:torrent/$path/$pattern")
+	done
+fi
 
 command=("${command[@]}" .)
 
