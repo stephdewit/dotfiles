@@ -2,7 +2,7 @@
 
 set -e
 
-limit=(--bwlimit=292K)
+limit=()
 path=data
 nagle_enabled=1
 verbosity=0
@@ -10,7 +10,7 @@ verbosity=0
 while getopts ":l:LpcdNvq" opt; do
 	case $opt in
 		l ) limit=("--bwlimit=$OPTARG");;
-		L ) limit=();;
+		L ) limit=(--bwlimit=292K);; # 1 GB per hour
 		p ) pretend=n;;
 		c ) checksum=c;;
 		d ) path=downloads;;
