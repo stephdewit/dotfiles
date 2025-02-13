@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+aws --profile=scw-sdw s3 cp \
+	"$1" \
+	"s3://sdw-downloads/$1" \
+	--metadata "creation-date=$(stat -c %w "$1" | sed -E -e 's/ /T/' -e 's/ //' -e 's/(..)$/:\1/')"
