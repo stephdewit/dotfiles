@@ -34,6 +34,7 @@ primary_keys=(
 hkp_servers=(
 	keys.openpgp.org
 	keyserver.ubuntu.com
+	pgp.mit.edu
 )
 
 encrypt=0
