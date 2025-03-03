@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -e
+
+die() {
+	echo "$@" 1>&2
+	exit 1
+}
+
+for file in "$@"; do
+	[ -f "$file" ] || die "No such file: $file"
+
+	read -r -p 'New path: ' -i "$file" -e newpath
+
+	if [ "$newpath" == "$file" ]; then
+		echo "Unchanged path: $file"
+		continue
+	fi
+
+	mv -iv "$file" "$newpath"
+done
