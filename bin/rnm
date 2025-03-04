@@ -12,6 +12,11 @@ for file in "$@"; do
 
 	read -r -p 'New path: ' -i "$file" -e newpath
 
+	if [ "$newpath" == "" ]; then
+		echo "Empty path, skipping: $file"
+		continue
+	fi
+
 	if [ "$newpath" == "$file" ]; then
 		echo "Unchanged path: $file"
 		continue
