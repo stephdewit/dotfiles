@@ -6,9 +6,11 @@ limit=()
 path=data
 nagle_enabled=1
 verbosity=0
+max_age_in_minutes=720 # 12 hours
 
-while getopts ":l:LpcdNvq" opt; do
+while getopts ":a:l:LpcdNvq" opt; do
 	case $opt in
+		a ) max_age_in_minutes=$(( OPTARG * 60 ));;
 		l ) limit=("--bwlimit=$OPTARG");;
 		L ) limit=(--bwlimit=292K);; # 1 GB per hour
 		p ) pretend=n;;
@@ -55,7 +57,7 @@ if [ -z "$1" ]; then
 	# shellcheck disable=SC2029
 	ssh jimbo "
 		find torrent/$path \
-		-mmin -720 \
+		-mmin -$max_age_in_minutes \
 		-type f \
 		-exec realpath --relative-to=torrent/$path {} \;
 	" > "$temp_file"
