@@ -8,7 +8,7 @@ die() {
 }
 
 for file in "$@"; do
-	[ -f "$file" ] || die "No such file: $file"
+	[ -f "$file" ] || [ -d "$file" ] || die "No such file: $file"
 
 	read -r -p 'New path: ' -i "$file" -e newpath
 
