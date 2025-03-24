@@ -25,6 +25,7 @@ noremap <Left> <nop>
 noremap <Right> <nop>
 
 map <F2> :nohl<CR>
+nnoremap <F5> :!%:p<CR>
 map <C-n> :NERDTreeToggle<CR>
 
 set smartindent
