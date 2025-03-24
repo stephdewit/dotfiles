@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+function die { echo "❌ $1" && exit 1 ; }
+
+[ -z "$1" ] && die 'Missing target host'
+[ -z "$SSH_AUTH_SOCK" ] && die 'Missing SSH agent'
+
+ssh -AT -o "UserKnownHostsFile=/dev/null" "root@$1" << 'EOF'
+echo '☎️ Connected!'
+echo
+
+function print_done { echo '✅ Done!' && echo ; }
+function print_dl { echo "📥 Downloading $1" ; }
+function print_bak { echo "💾 Backuping $1" ; }
+function print_sign { echo "✍️ Signing $1" ; }
+function print_reg { echo "📒 Registering $1" ; }
+function print_reload { echo '🔄 Reloading service' ; }
+function print_all_done { echo '💫 All done!' ; }
+
+etc=/etc/ssh
+conf=$etc/sshd_config.d/0000003certs.conf
+pki=https://pki.stephanedewit.be/ssh/ca
+
+function add_if_missing {
+	grep -xqF -- "$1" "$2" || echo "$1" >> "$2"
+}
+
+print_dl 'host CA public key'
+curl -Ss -o $etc/host_ca.pub $pki/host.pub
+print_done
+
+print_bak 'host keys'
+for f in $etc/ssh_host_*_key-cert.pub; do
+	[ -e $f ] && mv $f $f.bak
+done
+print_done
+
+print_sign 'host keys'
+ssh-keygen -hU \
+	-s $etc/host_ca.pub \
+	-I "$(hostname) host key" \
+	-n "$(hostname),$(hostname --fqdn)" \
+	-V -5m:+26w \
+	$etc/ssh_host_*_key.pub
+print_done
+
+print_reg 'host certificates'
+for f in $etc/ssh_host_*_key-cert.pub; do
+	add_if_missing "HostCertificate $f" $conf
+done
+print_done
+
+print_dl 'user CA public key'
+curl -Ss -o $etc/user_ca.pub $pki/user.pub
+print_done
+
+print_reg 'user CA public key'
+add_if_missing "TrustedUserCAKeys $etc/user_ca.pub" $conf
+print_done
+
+print_reload
+/etc/init.d/sshd reload
+print_done
+
+print_all_done
+EOF
