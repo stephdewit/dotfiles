@@ -46,7 +46,7 @@ print_done
 
 print_reg 'host certificates'
 for f in $etc/ssh_host_*_key-cert.pub; do
-	add_if_missing "HostCertificate $f" $conf
+	[ -e $f ] && add_if_missing "HostCertificate $f" $conf
 done
 print_done
 
