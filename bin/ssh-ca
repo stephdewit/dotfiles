@@ -55,6 +55,10 @@ if [ "$(whoami)" = root ]; then
 	done
 	print_done
 
+	print_reg 'host CA'
+	add_if_missing "@cert-authority * $(cat $etc/host_ca.pub)" $etc/ssh_known_hosts
+	print_done
+
 	print_dl 'user CA public key'
 	curl -Ss -o $etc/user_ca.pub $pki/user.pub
 	print_done
