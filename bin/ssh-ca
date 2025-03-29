@@ -24,7 +24,9 @@ conf=$etc/sshd_config.d/0000003certs.conf
 pki=https://pki.stephanedewit.be/ssh/ca
 
 function add_if_missing {
-	grep -xqF -- "$1" "$2" || echo "$1" >> "$2"
+	if [ ! -f $2  ] || ! grep -xqF -- "$1" "$2"; then
+		echo "$1" >> "$2"
+	fi
 }
 
 if [ "$(whoami)" = root ]; then
