@@ -64,6 +64,21 @@ if [ "$(whoami)" = root ]; then
 	print_reload
 	/etc/init.d/sshd reload
 	print_done
+else
+	print_bak 'user keys'
+	for f in ~/.ssh/id_*-cert.pub; do
+		[ -e $f ] && mv $f $f.bak
+	done
+	print_done
+
+	print_sign 'user keys'
+	ssh-keygen -U \
+		-s $etc/user_ca.pub \
+		-I "$(whoami)@$(hostname) user key" \
+		-n "$(whoami),root" \
+		-V -5m:+26w \
+		~/.ssh/id_*.pub
+	print_done
 fi
 
 print_all_done
