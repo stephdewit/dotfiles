@@ -6,6 +6,8 @@ function die { echo "❌ $1" && exit 1 ; }
 [ -z "$SSH_AUTH_SOCK" ] && die 'Missing SSH agent'
 
 ssh -AT -o "UserKnownHostsFile=/dev/null" "root@$1" << 'EOF'
+set -e
+
 echo '☎️ Connected!'
 echo
 
