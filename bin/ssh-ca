@@ -27,42 +27,44 @@ function add_if_missing {
 	grep -xqF -- "$1" "$2" || echo "$1" >> "$2"
 }
 
-print_dl 'host CA public key'
-curl -Ss -o $etc/host_ca.pub $pki/host.pub
-print_done
+if [ "$(whoami)" = root ]; then
+	print_dl 'host CA public key'
+	curl -Ss -o $etc/host_ca.pub $pki/host.pub
+	print_done
 
-print_bak 'host keys'
-for f in $etc/ssh_host_*_key-cert.pub; do
-	[ -e $f ] && mv $f $f.bak
-done
-print_done
+	print_bak 'host keys'
+	for f in $etc/ssh_host_*_key-cert.pub; do
+		[ -e $f ] && mv $f $f.bak
+	done
+	print_done
 
-print_sign 'host keys'
-ssh-keygen -hU \
-	-s $etc/host_ca.pub \
-	-I "$(hostname) host key" \
-	-n "$(hostname),$(hostname --fqdn)" \
-	-V -5m:+26w \
-	$etc/ssh_host_*_key.pub
-print_done
+	print_sign 'host keys'
+	ssh-keygen -hU \
+		-s $etc/host_ca.pub \
+		-I "$(hostname) host key" \
+		-n "$(hostname),$(hostname --fqdn)" \
+		-V -5m:+26w \
+		$etc/ssh_host_*_key.pub
+	print_done
 
-print_reg 'host certificates'
-for f in $etc/ssh_host_*_key-cert.pub; do
-	[ -e $f ] && add_if_missing "HostCertificate $f" $conf
-done
-print_done
+	print_reg 'host certificates'
+	for f in $etc/ssh_host_*_key-cert.pub; do
+		[ -e $f ] && add_if_missing "HostCertificate $f" $conf
+	done
+	print_done
 
-print_dl 'user CA public key'
-curl -Ss -o $etc/user_ca.pub $pki/user.pub
-print_done
+	print_dl 'user CA public key'
+	curl -Ss -o $etc/user_ca.pub $pki/user.pub
+	print_done
 
-print_reg 'user CA public key'
-add_if_missing "TrustedUserCAKeys $etc/user_ca.pub" $conf
-print_done
+	print_reg 'user CA public key'
+	add_if_missing "TrustedUserCAKeys $etc/user_ca.pub" $conf
+	print_done
 
-print_reload
-/etc/init.d/sshd reload
-print_done
+	print_reload
+	/etc/init.d/sshd reload
+	print_done
+fi
 
 print_all_done
 EOF
