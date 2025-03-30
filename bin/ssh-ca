@@ -42,7 +42,7 @@ if [ "$(whoami)" = root ]; then
 	dl $etc/host-ca.pub $pki/host.pub
 	print_done
 
-	print_bak 'host keys'
+	print_bak 'host certificates'
 	for f in $etc/ssh_host_*_key-cert.pub; do
 		[ -e $f ] && mv $f $f.bak
 	done
@@ -63,7 +63,7 @@ if [ "$(whoami)" = root ]; then
 	done
 	print_done
 
-	print_reg 'host CA'
+	print_reg 'host CA public key'
 	add_if_missing "@cert-authority * $(cat $etc/host-ca.pub)" $etc/ssh_known_hosts
 	print_done
 
@@ -83,7 +83,7 @@ if [ "$(whoami)" = root ]; then
 	fi
 	print_done
 else
-	print_bak 'user keys'
+	print_bak 'user certificates'
 	for f in ~/.ssh/id_*-cert.pub; do
 		[ -e $f ] && mv $f $f.bak
 	done
