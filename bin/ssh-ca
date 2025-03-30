@@ -20,7 +20,7 @@ function print_reload { echo '🔄 Reloading service' ; }
 function print_all_done { echo '💫 All done!' ; }
 
 etc=/etc/ssh
-conf=$etc/sshd_config.d/0000003certs.conf
+conf=$etc/sshd_config.d/certs.conf
 pki=https://pki.stephanedewit.be/ssh/ca
 
 function add_if_missing {
