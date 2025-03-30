@@ -39,7 +39,7 @@ function add_if_missing {
 
 if [ "$(whoami)" = root ]; then
 	print_dl 'host CA public key'
-	dl $etc/host_ca.pub $pki/host.pub
+	dl $etc/host-ca.pub $pki/host.pub
 	print_done
 
 	print_bak 'host keys'
@@ -50,7 +50,7 @@ if [ "$(whoami)" = root ]; then
 
 	print_sign 'host keys'
 	ssh-keygen -hU \
-		-s $etc/host_ca.pub \
+		-s $etc/host-ca.pub \
 		-I "$(hostname) host key" \
 		-n "$(hostname),$(hostname --fqdn),$(echo $SSH_CONNECTION | cut -d ' ' -f 3)" \
 		-V -5m:+26w \
@@ -64,15 +64,15 @@ if [ "$(whoami)" = root ]; then
 	print_done
 
 	print_reg 'host CA'
-	add_if_missing "@cert-authority * $(cat $etc/host_ca.pub)" $etc/ssh_known_hosts
+	add_if_missing "@cert-authority * $(cat $etc/host-ca.pub)" $etc/ssh_known_hosts
 	print_done
 
 	print_dl 'user CA public key'
-	dl $etc/user_ca.pub $pki/user.pub
+	dl $etc/user-ca.pub $pki/user.pub
 	print_done
 
 	print_reg 'user CA public key'
-	add_if_missing "TrustedUserCAKeys $etc/user_ca.pub" $conf
+	add_if_missing "TrustedUserCAKeys $etc/user-ca.pub" $conf
 	print_done
 
 	print_reload
@@ -91,7 +91,7 @@ else
 
 	print_sign 'user keys'
 	ssh-keygen -U \
-		-s $etc/user_ca.pub \
+		-s $etc/user-ca.pub \
 		-I "$(whoami)@$(hostname) user key" \
 		-n "$(whoami),root" \
 		-V -5m:+26w \
