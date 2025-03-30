@@ -25,16 +25,16 @@ pki=https://pki.stephanedewit.be/ssh/ca
 
 function dl {
 	if which curl >/dev/null 2>&1; then
-		curl -Ss -o $1 $2
+		curl -Ss -o "$1" "$2"
 	else
-		wget -q -O $1 $2
+		wget -q -O "$1" "$2"
 	fi
 
 	echo "Downloaded '$2' into '$1'"
 }
 
 function add_if_missing {
-	if [ ! -f $2  ] || ! grep -xqF -- "$1" "$2"; then
+	if [ ! -f "$2"  ] || ! grep -xqF -- "$1" "$2"; then
 		echo "$1" >> "$2"
 
 		echo "Added '$1' into '$2'"
@@ -47,8 +47,8 @@ if [ "$(whoami)" = root ]; then
 	print_done
 
 	print_bak 'host certificates'
-	for f in $etc/ssh_host_*_key-cert.pub; do
-		[ -e $f ] && mv -v $f $f.bak
+	for f in "$etc"/ssh_host_*_key-cert.pub; do
+		[ -e "$f" ] && mv -v "$f" "$f.bak"
 	done
 	print_done
 
@@ -56,14 +56,14 @@ if [ "$(whoami)" = root ]; then
 	ssh-keygen -hU \
 		-s $etc/host-ca.pub \
 		-I "$(hostname) host key" \
-		-n "$(hostname),$(hostname --fqdn),$(echo $SSH_CONNECTION | cut -d ' ' -f 3)" \
+		-n "$(hostname),$(hostname --fqdn),$(echo "$SSH_CONNECTION" | cut -d ' ' -f 3)" \
 		-V -5m:+26w \
 		$etc/ssh_host_*_key.pub
 	print_done
 
 	print_reg 'host certificates'
-	for f in $etc/ssh_host_*_key-cert.pub; do
-		[ -e $f ] && add_if_missing "HostCertificate $f" $conf/host-certs.conf
+	for f in "$etc"/ssh_host_*_key-cert.pub; do
+		[ -e "$f" ] && add_if_missing "HostCertificate $f" $conf/host-certs.conf
 	done
 	print_done
 
@@ -89,7 +89,7 @@ if [ "$(whoami)" = root ]; then
 else
 	print_bak 'user certificates'
 	for f in ~/.ssh/id_*-cert.pub; do
-		[ -e $f ] && mv -v $f $f.bak
+		[ -e "$f" ] && mv -v "$f" "$f.bak"
 	done
 	print_done
 
