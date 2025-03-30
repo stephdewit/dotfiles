@@ -44,7 +44,7 @@ if [ "$(whoami)" = root ]; then
 	ssh-keygen -hU \
 		-s $etc/host_ca.pub \
 		-I "$(hostname) host key" \
-		-n "$(hostname),$(hostname --fqdn)" \
+		-n "$(hostname),$(hostname --fqdn),$(echo $SSH_CONNECTION | cut -d ' ' -f 3)" \
 		-V -5m:+26w \
 		$etc/ssh_host_*_key.pub
 	print_done
