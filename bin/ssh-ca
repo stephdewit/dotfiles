@@ -68,7 +68,11 @@ if [ "$(whoami)" = root ]; then
 	print_done
 
 	print_reload
-	/etc/init.d/sshd reload
+	if which rc-service >/dev/null; then
+		rc-service sshd reload
+	else
+		systemctl reload sshd
+	fi
 	print_done
 else
 	print_bak 'user keys'
