@@ -29,11 +29,15 @@ function dl {
 	else
 		wget -q -O $1 $2
 	fi
+
+	echo "Downloaded '$2' into '$1'"
 }
 
 function add_if_missing {
 	if [ ! -f $2  ] || ! grep -xqF -- "$1" "$2"; then
 		echo "$1" >> "$2"
+
+		echo "Added '$1' into '$2'"
 	fi
 }
 
@@ -44,7 +48,7 @@ if [ "$(whoami)" = root ]; then
 
 	print_bak 'host certificates'
 	for f in $etc/ssh_host_*_key-cert.pub; do
-		[ -e $f ] && mv $f $f.bak
+		[ -e $f ] && mv -v $f $f.bak
 	done
 	print_done
 
@@ -85,7 +89,7 @@ if [ "$(whoami)" = root ]; then
 else
 	print_bak 'user certificates'
 	for f in ~/.ssh/id_*-cert.pub; do
-		[ -e $f ] && mv $f $f.bak
+		[ -e $f ] && mv -v $f $f.bak
 	done
 	print_done
 
