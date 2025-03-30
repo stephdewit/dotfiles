@@ -20,7 +20,7 @@ function print_reload { echo '🔄 Reloading service' ; }
 function print_all_done { echo '💫 All done!' ; }
 
 etc=/etc/ssh
-conf=$etc/sshd_config.d/certs.conf
+conf=$etc/sshd_config.d
 pki=https://pki.stephanedewit.be/ssh/ca
 
 function dl {
@@ -59,7 +59,7 @@ if [ "$(whoami)" = root ]; then
 
 	print_reg 'host certificates'
 	for f in $etc/ssh_host_*_key-cert.pub; do
-		[ -e $f ] && add_if_missing "HostCertificate $f" $conf
+		[ -e $f ] && add_if_missing "HostCertificate $f" $conf/host-certs.conf
 	done
 	print_done
 
@@ -72,7 +72,7 @@ if [ "$(whoami)" = root ]; then
 	print_done
 
 	print_reg 'user CA public key'
-	add_if_missing "TrustedUserCAKeys $etc/user-ca.pub" $conf
+	add_if_missing "TrustedUserCAKeys $etc/user-ca.pub" $conf/user-ca.conf
 	print_done
 
 	print_reload
