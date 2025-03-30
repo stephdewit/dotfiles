@@ -24,7 +24,7 @@ conf=$etc/sshd_config.d
 pki=https://pki.stephanedewit.be/ssh/ca
 
 function dl {
-	if which curl >/dev/null; then
+	if which curl >/dev/null 2>&1; then
 		curl -Ss -o $1 $2
 	else
 		wget -q -O $1 $2
@@ -76,7 +76,7 @@ if [ "$(whoami)" = root ]; then
 	print_done
 
 	print_reload
-	if which rc-service >/dev/null; then
+	if which rc-service >/dev/null 2>&1; then
 		rc-service sshd reload
 	else
 		systemctl reload sshd
