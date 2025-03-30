@@ -23,6 +23,14 @@ etc=/etc/ssh
 conf=$etc/sshd_config.d/certs.conf
 pki=https://pki.stephanedewit.be/ssh/ca
 
+function dl {
+	if which curl >/dev/null; then
+		curl -Ss -o $1 $2
+	else
+		wget -q -O $1 $2
+	fi
+}
+
 function add_if_missing {
 	if [ ! -f $2  ] || ! grep -xqF -- "$1" "$2"; then
 		echo "$1" >> "$2"
@@ -31,7 +39,7 @@ function add_if_missing {
 
 if [ "$(whoami)" = root ]; then
 	print_dl 'host CA public key'
-	curl -Ss -o $etc/host_ca.pub $pki/host.pub
+	dl $etc/host_ca.pub $pki/host.pub
 	print_done
 
 	print_bak 'host keys'
@@ -60,7 +68,7 @@ if [ "$(whoami)" = root ]; then
 	print_done
 
 	print_dl 'user CA public key'
-	curl -Ss -o $etc/user_ca.pub $pki/user.pub
+	dl $etc/user_ca.pub $pki/user.pub
 	print_done
 
 	print_reg 'user CA public key'
