@@ -42,7 +42,9 @@ if [ "$action" = "create" ]; then
 		--comment "$(uname -a)" \
 		--compression zstd,7 \
 		--exclude="$HOME/.config/borg/security/*/nonce" \
-		--exclude="$HOME/"{downloads,media,ssd} \
+		--exclude="$HOME/"{.cache,downloads,media,ssd} \
+		--exclude="$HOME/dev/go" \
+		--exclude="$HOME/dev/infra/cloud/"{shared/tf-providers,deployment/.venv} \
 		"$repo::{hostname}-{now}" \
 		"$HOME"
 elif [ "$action" = "list" ]; then
