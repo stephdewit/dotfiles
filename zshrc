@@ -11,6 +11,7 @@ ZSH_THEME="stephdewit"
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias dotenv='setopt allexport ; . ./.env ; unsetopt allexport'
 
 # Set to this to use case-sensitive completion
 CASE_SENSITIVE="true"
