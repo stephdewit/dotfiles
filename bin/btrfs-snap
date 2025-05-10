@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+mountpoint=/mnt/fs-top-level
+mount $mountpoint
+
+trap 'umount $mountpoint' EXIT
+
+for d in "$mountpoint/snapshots/"*; do
+	subvolume="${d##*/}"
+
+	btrfs subvolume snapshot -r "$mountpoint/$subvolume" "$mountpoint/snapshots/$subvolume/$(date -u +"%Y-%m-%d_%H-%M-%S")"
+done
