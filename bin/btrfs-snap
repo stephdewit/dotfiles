@@ -10,3 +10,5 @@ for d in "$mountpoint/snapshots/"*; do
 
 	btrfs subvolume snapshot -r "$mountpoint/$subvolume" "$mountpoint/snapshots/$subvolume/$(date -u +"%Y-%m-%d_%H-%M-%S")"
 done
+
+btrfs filesystem du -s "$mountpoint/snapshots/"*/*
