@@ -7,6 +7,11 @@ for f in *.*; do
 		continue
 	fi
 
+	if ! find "$f" -mtime +60 -print | grep -q .; then
+		echo "Skipping '$f': too new"
+		continue
+	fi
+
 	stream_count=$(mediainfo --Output="Video;%StreamCount%\n" "$f" | head -n 1)
 
 	if [ "$stream_count" == "" ]; then
