@@ -70,8 +70,10 @@ elif [ "$action" = "delete" ]; then
 elif [ "$action" = "prune" ]; then
 	[ $verbose -eq 1 ] && parameters=(-v --list)
 
+	# add century to hostname to avoid pruning
+	# archives from servers with similar hostame
 	borg prune \
-		--glob-archives '{hostname}-*' \
+		--glob-archives '{hostname}-20*' \
 		"${parameters[@]}" \
 		--keep-within 2d \
 		--keep-daily 7 \
