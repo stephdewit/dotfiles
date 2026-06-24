@@ -46,6 +46,7 @@ if [ "$action" = "create" ]; then
 		--exclude="$HOME/dev/go" \
 		--exclude="$HOME/dev/infra/cloud/"{shared/tf-providers,deployment/.venv} \
 		--exclude="$HOME/dev/infra/local/deployment/.venv" \
+		--exclude="$HOME/dev/www-28s/.git/modules/themes" \
 		"$repo::{hostname}-{now}" \
 		"$HOME"
 elif [ "$action" = "list" ]; then
