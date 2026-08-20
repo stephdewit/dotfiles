@@ -55,7 +55,7 @@ if [ -z "$1" ]; then
 	trap 'rm -f $temp_file' EXIT
 
 	# shellcheck disable=SC2029
-	ssh jimbo "
+	ssh jimbo-notty "
 		find torrent/$path \
 		-mmin -$max_age_in_minutes \
 		-type f \
@@ -64,10 +64,10 @@ if [ -z "$1" ]; then
 
 	[ $verbosity -ge 1 ] && cat "$temp_file"
 
-	command=("${command[@]}" "--files-from=$temp_file" "jimbo:torrent/$path")
+	command=("${command[@]}" "--files-from=$temp_file" "jimbo-notty:torrent/$path")
 else
 	for pattern in "$@"; do
-		command=("${command[@]}" "jimbo:torrent/$path/$pattern")
+		command=("${command[@]}" "jimbo-notty:torrent/$path/$pattern")
 	done
 fi
 
