@@ -14,11 +14,12 @@
 	mg = merge
 	rb = rebase
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset' --abbrev-commit --
-	prbr = !git remote prune ${1-origin} && git branch --verbose | awk -F ' ' '/\\[gone\\]/ { print $1 }' | xargs -r git branch --delete
+	gone = !git pull && git remote prune ${1-origin} && git branch --verbose | awk -F ' ' '/\\[gone\\]/ { print $1 }' | xargs --no-run-if-empty -r git branch --delete
 	head = rev-parse --verify --short HEAD
 	tags = tag --sort=-version:refname -n
 	lt = describe --tags --abbrev=0
 	arch = "!git archive -o ../${PWD##*/}.tgz HEAD"
+	gf-promote = !git checkout develop && git pull && git push && git checkout main && git pull && git merge --ff-only develop && git push && git checkout -
 [color]
 	branch = auto
 	diff = auto
