@@ -44,7 +44,8 @@ if [ "$action" = "create" ]; then
 		--exclude="$HOME/.config/borg/security/*/nonce" \
 		--exclude="$HOME/"{.cache,downloads,media,ssd} \
 		--exclude="$HOME/dev/go" \
-		--exclude="$HOME/dev/infra/cloud/"{shared/tf-providers,deployment/.venv} \
+		--exclude="$HOME/dev/infra/cloud/deployment/.venv" \
+		--exclude="$HOME/.terraform.d/plugin-cache" \
 		--exclude="$HOME/dev/infra/local/deployment/.venv" \
 		--exclude="$HOME/dev/www-28s/.git/modules/themes" \
 		"$repo::{hostname}-{now}" \
