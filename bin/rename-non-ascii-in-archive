@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -e
+
+7zz l -slt "$1" | sed -n 'N;/\n.*Folder = -/{s/^Path = //;P;};D' | while read -r f; do
+	if [[ "$f" != *[![:ascii:]]* ]]; then
+		continue
+	fi
+
+	7zz rn \
+		"$1" \
+		"$f" \
+		"$(echo $f | iconv -f UTF-8-MAC -t ASCII//TRANSLIT | sed "s/['\`^]\([aeiou]\)/\1/g")"
+done
