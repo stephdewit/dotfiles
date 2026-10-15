@@ -4,5 +4,8 @@
       "Bash(go *)",
       "Bash(git *)"
     ]
-  }
+  },
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "model": "opus"
 }
