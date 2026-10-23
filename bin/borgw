@@ -42,7 +42,7 @@ if [ "$action" = "create" ]; then
 		--comment "$(uname -a)" \
 		--compression zstd,7 \
 		--exclude="$HOME/.config/borg/security/*/nonce" \
-		--exclude="$HOME/"{.cache,downloads,media,ssd} \
+		--exclude="$HOME/"{.cache,downloads,media} \
 		--exclude="$HOME/dev/go" \
 		--exclude="$HOME/dev/infra/cloud/deployment/.venv" \
 		--exclude="$HOME/.terraform.d/plugin-cache" \
