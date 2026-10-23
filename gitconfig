@@ -32,6 +32,7 @@
 	sort = -committerdate
 [tag]
 	gpgSign = true
+	sort = -version:refname
 [push]
 	default = simple
 [diff]
