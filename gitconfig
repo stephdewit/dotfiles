@@ -28,6 +28,8 @@
 [core]
 	excludesfile = ~/.gitignore
 	pager = delta
+[branch]
+	sort = -committerdate
 [tag]
 	gpgSign = true
 [push]
