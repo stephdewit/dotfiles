@@ -45,6 +45,9 @@
 	wsErrorHighlight = all
 [merge]
 	ff = only
+[rerere]
+	enabled = true
+	autoupdate = true
 [interactive]
     diffFilter = delta --color-only --features=interactive
 [delta]
