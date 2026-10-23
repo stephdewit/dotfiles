@@ -37,20 +37,9 @@
 	default = simple
 	autoSetupRemote = true
 [diff]
-	tool = Kaleidoscope
 	wsErrorHighlight = all
 [merge]
-	tool = Kaleidoscope
 	ff = only
-[mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustExitCode = true
-[difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-[difftool]
-	prompt = false
-[mergetool]
-	prompt = false
 [interactive]
     diffFilter = delta --color-only --features=interactive
 [delta]
