@@ -35,6 +35,7 @@
 	sort = -version:refname
 [push]
 	default = simple
+	autoSetupRemote = true
 [diff]
 	tool = Kaleidoscope
 	wsErrorHighlight = all
