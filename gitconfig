@@ -28,6 +28,8 @@
 [core]
 	excludesfile = ~/.gitignore
 	pager = delta
+[init]
+	defaultBranch = main
 [branch]
 	sort = -committerdate
 [tag]
@@ -57,5 +59,3 @@
 [pull]
 	rebase = false
 	ff = only
-[init]
-	defaultBranch = main
