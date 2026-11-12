@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -e
+
+die() {
+	echo "$@" 1>&2
+	exit 1
+}
+
+pack=0
+unpack=0
+
+if [ "$1" = pack ]; then
+	pack=1
+elif [ "$1" = unpack ]; then
+	unpack=1
+fi
+
+if [ $pack -eq 0 ] && [ $unpack -eq 0 ]; then
+	die missing action
+fi
+
+shift
+
+if [ "$1" = "" ]; then
+	die missing source file
+fi
+
+if [ $pack -eq 1 ]; then
+	declare -a zips
+
+	for file in "$@"; do
+		if [ -d "$file" ]; then
+			source="$file.tar"
+			tar cf "$file.tar" "$file"
+			touch -r "$file" "$file.tar"
+		else
+			source=$file
+		fi
+
+		lzip -k9 "$source"
+		zips+=("$source.lz")
+    done
+
+	shasum -a 256 "${zips[@]}" > "$1.sha256"
+
+	gpg --detach-sig --armor "$1.sha256"
+
+	tar cf "$1.signed.tar" "${zips[@]}" "$1.sha256" "$1.sha256.asc"
+	touch -r "$1" "$1.signed.tar"
+else
+	echo unpack
+fi
