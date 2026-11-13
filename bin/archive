@@ -27,27 +27,29 @@ if [ "$1" = "" ]; then
 fi
 
 if [ $pack -eq 1 ]; then
-	declare -a zips
+	declare -a files
 
 	for file in "$@"; do
 		if [ -d "$file" ]; then
-			source="$file.tar"
-			tar cf "$file.tar" "$file"
-			touch -r "$file" "$file.tar"
+			LZIP=-9 tar --lzip -cf "$file.tar.lz" "$file"
+			touch -r "$file" "$file.tar.lz"
+			files+=("$file.tar.lz")
 		else
-			source=$file
+			lzip -k9 "$file"
+			files+=("$file.lz")
 		fi
-
-		lzip -k9 "$source"
-		zips+=("$source.lz")
     done
 
-	shasum -a 256 "${zips[@]}" > "$1.sha256"
+	shasum -a 256 "${files[@]}" > "$1.sha256"
+	files+=("$1.sha256")
 
 	gpg --detach-sig --armor "$1.sha256"
+	files+=("$1.sha256.asc")
 
-	tar cf "$1.signed.tar" "${zips[@]}" "$1.sha256" "$1.sha256.asc"
+	tar cf "$1.signed.tar" "${files[@]}"
 	touch -r "$1" "$1.signed.tar"
+
+	rm "${files[@]}"
 else
 	echo unpack
 fi
